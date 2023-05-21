@@ -13,5 +13,5 @@
 
 ## Sources:
 
-### seedrandom.js by dividbau: https://github.com/davidbau/seedrandom
+### seedrandom.js by davidbau: https://github.com/davidbau/seedrandom
 Used for random number generator with seeding to create the same level layout for repeat playthroughs.
