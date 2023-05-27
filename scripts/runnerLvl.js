@@ -20,7 +20,7 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     preload() {
-        this.load.path = "/assets/";
+        this.load.path = "assets/";
         this.load.image("block", "placeholder.JPG");
         this.load.image("belt", "belt-placeholder.png");
     }
