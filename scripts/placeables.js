@@ -44,11 +44,13 @@ class Placeable {
                 }
             })
             .on("pointerup", () => { // drop object
-                self.grabbed = false;
-                if (self.sprite.y > self.bound) {
-                    self.Place(); // add physics
-                } else {
-                    belt.fixPosition(self); // fix position, put back in order on conveyer belt
+                if (!self.placed) {
+                    self.grabbed = false;
+                    if (self.sprite.y > self.bound) {
+                        self.Place(); // add physics
+                    } else {
+                        belt.fixPosition(self); // fix position, put back in order on conveyer belt
+                    }
                 }
             });
         
