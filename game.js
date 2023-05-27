@@ -10,8 +10,8 @@ const game = new Phaser.Game({
     powerPerformance: "high-performance",
     title: "Runner",
     physics: {
-        default: "arcade",
-        arcade: {
+        default: "matter",
+        matter: {
             debug: true
         }
     }
