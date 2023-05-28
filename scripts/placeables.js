@@ -6,7 +6,10 @@
 class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=2) {
         this.sprite = scene.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
+        this.source = sprite; // the source image string
         this.scene = scene;
+
+        this.objectType = "Placeable"; // sub classes will replace this string with their own unique type
 
         this.belt = belt; // reference to the belt object to remove self from belt list 
         this.bound = belt.sprite.y + (belt.sprite.height / 2);  // dead zone for placing object, if object is still on conveyer belt do not drop
@@ -16,6 +19,7 @@ class Placeable {
 
         this.placed = false;    // tracks if object has been placed
         this.grabbed = false;   // player is currently placing object
+        this.saved = false;     // if object was placed in a previous run, previous duplicate saves
 
         // on interaction animations
         let self = this;
@@ -86,4 +90,27 @@ class Placeable {
         this.sprite.setScale(scale);
         this.originalScale = scale;
     }
+
+    // returns a json object version of the placeable instance
+    JSON() {
+        const obj = {
+            objectType: this.objectType,
+            sprite: this.source,
+            y: this.sprite.y,
+            rotation: this.sprite.rotation
+        };
+
+        return obj;
+    }
+}
+
+// specific maker for
+function PlaceableMaker(scene, jsonObj) {
+    let obj = new Placeable(scene, scene.objSpawn, jsonObj.y, jsonObj.sprite, scene.belt);
+    obj.Place();
+    obj.sprite.body.isStatic = true;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.saved = true;
+
+    return obj;
 }

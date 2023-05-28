@@ -17,6 +17,10 @@ class RunnerLevel extends Phaser.Scene {
         this.minHeight = minHeight; // min height of a box
 
         this.placed = []; // list placeables that have been placed
+
+        this.loader = new Loader(this); // object loader
+        this.progress = 0; // int that will track the relative x coord progress of the player, used as the key for local storage
+        this.objSpawn = this.width + 300; // x coord for object load points
     }
 
     preload() {
@@ -51,13 +55,10 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     // remove object from placed list
-    removeObject(object) {
-        const i = this.placed.indexOf(object);
-        if (i != -1) {
-            this.placed[i].sprite.destroy();
-            this.placed[i] = null;
-            this.placed.splice(i, 1);
-        }
+    removeObject(i) {
+        this.placed[i].sprite.destroy();
+        this.placed[i] = null;
+        this.placed.splice(i, 1);
     }
 
     // delta contains the time since the last frame update
@@ -69,13 +70,22 @@ class RunnerLevel extends Phaser.Scene {
             this.boxQueue[i].x -= this.speed * delta;
         }
 
+        // update progress
+        this.progress += 1;
+
+        // check if object should be placed
+        this.loader.Load(this.progress);
+
         // update object positions, and check if any should be destroyed
         for(let i = 0; i < this.placed.length; i++) {
             this.placed[i].sprite.x -= this.speed * delta; // update position
 
             // destroy object
             if(this.placed[i].sprite.x <= 0 - this.placed[i].sprite.width) {
-                this.removeObject(this.placed);
+                if (!this.placed[i].saved) {
+                    this.loader.Save(this.progress - 570, this.placed[i]);
+                }
+                this.removeObject(i);
             }
         }
 

@@ -23,7 +23,6 @@ class Belt {
     // remove object from objects list
     removeObject(object) {
         const index = this.objects.indexOf(object);
-        console.log(index);
         if (index != -1) {
             this.objects.splice(index, 1);
         }
