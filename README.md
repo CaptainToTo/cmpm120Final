@@ -2,7 +2,7 @@
 
 ## Roles:
 
-### Production Lead: Joost Vonk
+### Production Lead: Joost "Will" Vonk
 
 ### Programming Lead: Anthony Umemoto
 
