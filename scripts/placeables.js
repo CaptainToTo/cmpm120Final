@@ -25,7 +25,7 @@ class Placeable {
         let self = this;
         this.sprite.setInteractive()
             .on("pointerover", () => { // stretch when hovered over
-                if (!self.placed) {
+                if (!self.placed && !self.grabbed) {
                     scene.tweens.add({
                         targets: self.sprite,
                         scale: self.originalScale + (self.originalScale * 0.1),

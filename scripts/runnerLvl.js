@@ -80,11 +80,16 @@ class RunnerLevel extends Phaser.Scene {
         for(let i = 0; i < this.placed.length; i++) {
             this.placed[i].sprite.x -= this.speed * delta; // update position
 
-            // destroy object
+            // save object
             if(this.placed[i].sprite.x <= 0 - this.placed[i].sprite.width) {
                 if (!this.placed[i].saved) {
                     this.loader.Save(this.progress - 570, this.placed[i]);
+                    this.placed[i].saved = true;
                 }
+            }
+
+            // destroy object
+            if(this.placed[i].sprite.x <= -(this.placed[i].sprite.width + 200)) {
                 this.removeObject(i);
             }
         }
@@ -98,7 +103,7 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // check if last box should be removed, remove if 2nd to last box is partially off screen
-        if(this.boxQueue[1].x <= 0) {
+        if(this.boxQueue[1].x <= -this.maxWidth) {
             let temp = this.boxQueue.shift();
             temp.destroy();
             temp = null;
