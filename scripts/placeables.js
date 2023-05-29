@@ -95,7 +95,7 @@ class Placeable {
     JSON() {
         const obj = {
             objectType: this.objectType,
-            sprite: this.source,
+            //sprite: this.source,
             y: this.sprite.y,
             rotation: this.sprite.rotation
         };
@@ -104,9 +104,91 @@ class Placeable {
     }
 }
 
-// specific maker for
-function PlaceableMaker(scene, jsonObj) {
-    let obj = new Placeable(scene, scene.objSpawn, jsonObj.y, jsonObj.sprite, scene.belt);
+/* specific maker for
+function PlaceableMaker(scene, jsonObj, sprite) {
+    let obj = new Placeable(scene, scene.objSpawn, jsonObj.y, sprite, scene.belt);
+    obj.Place();
+    obj.sprite.body.isStatic = true;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.saved = true;
+
+    return obj;
+}*/
+
+// bomb
+class Bomb {
+    constructor(scene, x, y, belt, stretch=2) {
+        super(scene, x, y, "bomb", belt, stretch);
+        this.objectType = "Bomb";
+    }
+
+    Place() {
+        super.Place();
+        this.sprite.body.isStatic = true;
+
+        // check for collisions
+        for (let i = 0; i < scene.boxQueue.length; i++) {
+            const col = Matter.SAT.collides(this.sprite.body, scene.boxQueue[i].sprite.body);
+
+            if (col.collided) {
+                if (scene.boxQueue[i].objectType == "Bedrock") continue;
+                // TODO: exploding animation
+                scene.boxQueue[i].Demolish();
+                break;
+            }
+        }
+        
+        // destroy
+        this.scene.time.delayedCall( 500, () => {
+            this.sprite.destroy();
+            this = null;
+        });
+    }
+}
+
+// water bucket
+class WaterBucket {
+    constructor(scene, x, y, belt, stretch=2) {
+        super(scene, x, y, "waterbucket", belt, stretch);
+        this.objectType = "WaterBucket";
+    }
+
+    Place() {
+        super.Place();
+        this.sprite.body.isStatice = true;
+        
+        // check for collisions
+        for (let i = 0; i < scene.boxQueue.length; i++) {
+            const col = Matter.SAT.collides(this.sprite.body, scene.boxQueue[i].sprite.body);
+
+            if (col.collided) {
+                if (scene.boxQueue[i].objectType == "Bedrock") continue;
+                // TODO: weathering animation
+                scene.boxQueue[i].Weather();
+                break;
+            }
+        }
+        
+        // destroy
+        this.scene.time.delayedCall( 500, () => {
+            this.sprite.destroy();
+            this = null;
+        });
+    }
+}
+
+
+// jump pad
+class JumpPad {
+    constructor(scene, x, y, belt, stretch) {
+        super(scene, x, y, "jumppad", belt, stretch);
+        this.objectType = "JumpPad";
+    }
+}
+
+// specific maker for jump pad object
+function JumpPadMaker(scene, jsonObj) {
+    let obj = new JumpPad(scene, scene.objSpawn, jsonObj.y, scene.belt);
     obj.Place();
     obj.sprite.body.isStatic = true;
     obj.sprite.rotation = jsonObj.rotation;
@@ -114,3 +196,26 @@ function PlaceableMaker(scene, jsonObj) {
 
     return obj;
 }
+
+// ramp up
+class Ramp {
+    constructor(scene, x, y, belt, stretch=2) {
+        super(scene, x, y, "ramp", belt, stretch);
+        this.objectType = "Ramp";
+        // TODO: change hitbox to triangle
+    }
+}
+
+// specific maker for ramp object
+function RampMaker(scene, jsonObj) {
+    let obj = new Ramp(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.Place();
+    obj.sprite.body.isStatic = true;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.saved = true;
+
+    return obj;
+}
+
+
+// TODO: add in placeable obstacles 

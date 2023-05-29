@@ -15,6 +15,13 @@ class RunnerLevel extends Phaser.Scene {
         this.minWidth = minWidth; // min width of a box
         this.maxHeight = maxHeight; // max height of a box
         this.minHeight = minHeight; // min height of a box
+        this.demolishHeight = minHeight; // height obstacles will be set at when demolished
+        // probabilities of each obst object type being generated, must add up to 1
+        this.probs = [
+            {prob: 0.2, type: Explodable},
+            {prob: 0.7, type: Weatherable},
+            {prob: 0.1, type: Bedrock}, 
+        ];
 
         this.placed = []; // list placeables that have been placed
 
@@ -37,12 +44,21 @@ class RunnerLevel extends Phaser.Scene {
             height = this.minHeight + (this.rand() * (this.maxHeight - this.minHeight)); 
         }
 
-        //console.log(width, height);
-        let box = this.add.tileSprite(x + width / 2, y, width, height, "block");
-        this.matter.add.gameObject(box);
-        box.body.isStatic = true;
-        box.setOrigin(0.5, 0.5);
-        return box;
+        // check if object should be placed
+        let obj = this.loader.Load("O" + String(this.progress));
+        if (obj != null) {
+            return obj;
+        }
+
+        const pick = this.rand(); // random number from [0, 1)
+        
+        let total = 0;
+        for (let i = 0; i < this.probs.length; i++) {
+            total += this.probs[i].prob;
+            if (pick < total) {
+                return new this.probs[i].type(this, x, y, width, height, sprite, this.demolishHeight);
+            }
+        }
     }
 
     create() {
@@ -74,7 +90,7 @@ class RunnerLevel extends Phaser.Scene {
         this.progress += 1;
 
         // check if object should be placed
-        this.loader.Load(this.progress);
+        this.loader.Load("P" + String(this.progress));
 
         // update object positions, and check if any should be destroyed
         for(let i = 0; i < this.placed.length; i++) {
@@ -83,7 +99,7 @@ class RunnerLevel extends Phaser.Scene {
             // save object
             if(this.placed[i].sprite.x <= 0 - this.placed[i].sprite.width) {
                 if (!this.placed[i].saved) {
-                    this.loader.Save(this.progress - 570, this.placed[i]);
+                    this.loader.Save("P" + String(this.progress - 570), this.placed[i]);
                     this.placed[i].saved = true;
                 }
             }
@@ -105,7 +121,8 @@ class RunnerLevel extends Phaser.Scene {
         // check if last box should be removed, remove if 2nd to last box is partially off screen
         if(this.boxQueue[1].x <= -this.maxWidth) {
             let temp = this.boxQueue.shift();
-            temp.destroy();
+            this.loader.Save("O" + String(this.progress - 570), temp);
+            temp.sprite.destroy();
             temp = null;
         }       
     }

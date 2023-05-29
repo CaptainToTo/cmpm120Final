@@ -16,8 +16,16 @@ class Belt {
         this.scaleWidth = (this.sprite.width * this.scale);
         this.spacing = 100; // space placed in between objects
         this.margin = this.sprite.x - (this.scaleWidth / 2) + 150; // stopping point for first object on belt in global space
-        this.spawn = this.sprite.x + (this.scaleWidth / 2); // x coord where objects will be instantiated
+        this.spawn = this.sprite.x + (this.scaleWidth / 2) + 200; // x coord where objects will be instantiated
         this.speed = 0.5;  // speed objects move at down the belt
+
+        // probabilities of each placeable object type being generated, must add up to 1
+        this.probs = [
+            {prob: 0.1, type: Bomb},
+            {prob: 0.2, type: JumpPad},
+            {prob: 0.3, type: Ramp},
+            {prob: 0.4, type: WaterBucket},
+        ];
     }
 
     // remove object from objects list
@@ -38,6 +46,19 @@ class Belt {
                 this.objects[i].sprite.x = this.objects[i - 1].sprite.x + (this.objects[i - 1].sprite.width / 2) + this.spacing;
             }
             this.objects[i].sprite.y = this.sprite.y;
+        }
+    }
+
+    // returns a new placeable object
+    NewObject() {
+        const pick = Math.random(); // random number from [0, 1)
+        
+        let total = 0;
+        for (let i = 0; i < this.probs.length; i++) {
+            total += this.probs[i].prob;
+            if (pick < total) {
+                return new this.probs[i].type(this.scene, this.spawn, this.sprite.y, this);
+            }
         }
     }
 

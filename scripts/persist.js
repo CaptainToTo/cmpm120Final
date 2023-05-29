@@ -12,7 +12,11 @@ class Maker {
 
         // map of specific makers, *****ADD SPECIFIC MAKERS HERE*****
         this.makers = {
-            Placeable: PlaceableMaker
+            Explodable: ExplodableMaker,
+            Weatherable: WeatherableMaker,
+            Bedrock: BedrockMaker,
+            JumpPad: JumpPadMaker,
+            Ramp: RampMaker
         }
     }
 
