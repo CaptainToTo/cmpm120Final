@@ -15,7 +15,7 @@ class RunnerLevel extends Phaser.Scene {
         this.minWidth = minWidth; // min width of a box
         this.maxHeight = maxHeight; // max height of a box
         this.minHeight = minHeight; // min height of a box
-        this.demolishHeight = minHeight; // height obstacles will be set at when demolished
+        this.demolishedHeight = minHeight; // height obstacles will be set at when demolished
         // probabilities of each obstacle object type being generated, must add up to 1
         this.probs = [
             {prob: 0.2, type: Explodable},
@@ -25,9 +25,12 @@ class RunnerLevel extends Phaser.Scene {
 
         this.placed = []; // list placeables that have been placed
 
-        this.loader = new Loader(this); // object loader
-        this.progress = 0; // int that will track the relative x coord progress of the player, used as the key for local storage
+        this.pList = new LoadList(this, "P"); // placeables loader list
+        this.progress = this.width; // float that will track the relative x coord progress (px) of the player, used as the key for local storage
         this.objSpawn = this.width + 300; // x coord for object load points
+
+        this.loader = new Loader(this); // obstacles loader list
+        this.blockNo = 0; //index of the next block to be loader
     }
 
     preload() {
@@ -48,6 +51,17 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     addBox(x, y, width=0, height=0) {
+
+        this.blockNo += 1;
+        // check if object should be placed
+        if(this.boxQueue.length > 0) {
+            let obj = this.loader.Load("O" + String(this.blockNo));
+            if (obj != null) {
+                return obj;
+            }
+        }
+
+        // generate new blocks
         if (width <= 0) { 
             width = this.minWidth + (this.rand() * (this.maxWidth - this.minWidth)); 
         }
@@ -55,19 +69,12 @@ class RunnerLevel extends Phaser.Scene {
             height = this.minHeight + (this.rand() * (this.maxHeight - this.minHeight)); 
         }
 
-        // check if object should be placed
-        let obj = this.loader.Load("O" + String(this.progress));
-        if (obj != null) {
-            return obj;
-        }
-
-        // generate new blocks
         const pick = this.rand(); // random number from [0, 1)
         let total = 0;
         for (let i = 0; i < this.probs.length; i++) {
             total += this.probs[i].prob;
             if (pick < total) {
-                return new this.probs[i].type(this, x, y, width, height, this.demolishHeight);
+                return new this.probs[i].type(this, x, y, width, height, this.demolishedHeight);
             }
         }
     }
@@ -98,19 +105,23 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // update progress
-        this.progress += 1;
+        this.progress += this.speed * delta;
 
-        // check if object should be placed
-        this.loader.Load("P" + String(this.progress));
+        // check for next placeable to be loaded
+        let temp = this.pList.Load(parseInt(this.progress));
+        if (temp != null) {
+            console.log(this.progress)
+        }
 
         // update object positions, and check if any should be destroyed
         for(let i = 0; i < this.placed.length; i++) {
             this.placed[i].sprite.x -= this.speed * delta; // update position
 
             // save object
-            if(this.placed[i].sprite.x <= 0 - this.placed[i].sprite.width) {
+            if(this.placed[i].sprite.x <= -this.placed[i].sprite.width) {
                 if (!this.placed[i].saved) {
-                    this.loader.Save("P" + String(this.progress - 570), this.placed[i]);
+                    console.log(this.progress, (this.objSpawn - this.placed[i].sprite.x))
+                    this.pList.Insert(this.placed[i]);
                     this.placed[i].saved = true;
                 }
             }
@@ -132,7 +143,10 @@ class RunnerLevel extends Phaser.Scene {
         // check if last box should be removed, remove if 2nd to last box is partially off screen
         if(this.boxQueue[1].sprite.x <= -this.maxWidth) {
             let temp = this.boxQueue.shift();
-            this.loader.Save("O" + String(this.progress - 570), temp);
+            if (!temp.saved) {
+                this.loader.Save("O" + String(temp.blockNo), temp);
+                temp.saved = true;
+            }
             temp.sprite.destroy();
             temp = null;
         }       

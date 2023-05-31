@@ -3,9 +3,12 @@
 
 // root class describes basics animations and behaviors
 
+let placeablesIDs = 0;
+
 class Placeable {
-    constructor(scene, x, y, sprite, belt, stretch=2) {
-        this.sprite = scene.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
+    constructor(scene, x, y, sprite, belt, stretch=1) {
+        this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
+        this.sprite.body.isStatic = true;
         this.source = sprite; // the source image string
         this.scene = scene;
 
@@ -73,8 +76,10 @@ class Placeable {
         this.placed = true;
 
         this.belt.removeObject(this); // remove from conveyer belt
-        this.scene.matter.add.gameObject(this.sprite); // add sprite to physics
+        this.sprite.body.isStatic = false; // add sprite to physics
         this.scene.placed.push(this); // add self to scene's list of placed objects
+
+        
 
         /* animate stretch
         this.scene.tweens.add({
@@ -96,8 +101,9 @@ class Placeable {
     JSON() {
         const obj = {
             objectType: this.objectType,
-            //sprite: this.source,
+            id: this.id,
             y: this.sprite.y,
+            x: this.scene.progress - (this.scene.objSpawn - this.sprite.x),
             rotation: this.sprite.rotation
         };
 
@@ -158,8 +164,8 @@ class WaterBucket extends Placeable {
         this.sprite.body.isStatic = true;
         
         // check for collisions
-        let self = this;
-        this.scene.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+        /*let self = this;
+        this.scene.matter.world.on('collisionactive', (event, bodyA, bodyB) => {
             console.log("collided");
             for (let i = 0; i < self.scene.boxQueue.length; i++) {
                 if (bodyA == self.sprite.body && bodyB == self.scene.boxQueue[i].sprite.body) {
@@ -169,9 +175,9 @@ class WaterBucket extends Placeable {
                     self.scene.boxQueue[i].Weather();
                 }
             }
-        });
+        });*/
 
-        /*
+        
         for (let i = 0; i < this.scene.boxQueue.length; i++) {
             const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
             
@@ -181,7 +187,7 @@ class WaterBucket extends Placeable {
                 this.scene.boxQueue[i].Weather();
                 break;
             }
-        }*/
+        }
         
         // destroy
         this.scene.time.delayedCall( 500, () => {
@@ -197,36 +203,76 @@ class JumpPad extends Placeable {
     constructor(scene, x, y, belt, stretch) {
         super(scene, x, y, "jumppad", belt, stretch);
         this.objectType = "JumpPad";
+        this.origY = y; // used to check if placeable has moved
+    }
+
+    Place() {
+        super.Place();
+        if (!this.saved) {
+            this.id = placeablesIDs;
+            placeablesIDs += 1;
+        }
+
+        this.scene.tweens.add({
+            targets: this.sprite,
+            scale: this.stretch,
+            duration: 200
+        });
+
+        this.scene.time.delayedCall(200, this.setScale(this.stretch));
     }
 }
 
 // specific maker for jump pad object
 function JumpPadMaker(scene, jsonObj) {
     let obj = new JumpPad(scene, scene.objSpawn, jsonObj.y, scene.belt);
-    obj.Place();
-    obj.sprite.body.isStatic = true;
-    obj.sprite.rotation = jsonObj.rotation;
+    //obj.sprite.x += obj.sprite.width;
     obj.saved = true;
+    obj.Place();
+    obj.saved = false;
+    //obj.sprite.body.isStatic = true;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.id = jsonObj.id;
 
     return obj;
 }
 
 // ramp up
 class Ramp extends Placeable {
-    constructor(scene, x, y, belt, stretch=2) {
+    constructor(scene, x, y, belt, stretch) {
         super(scene, x, y, "ramp", belt, stretch);
         this.objectType = "Ramp";
+        this.origY = y; // used to check if placeable has moved
         // TODO: change hitbox to triangle
+    }
+
+    Place() {
+        super.Place();
+        if (!this.saved) {
+            this.id = placeablesIDs;
+            placeablesIDs += 1;
+        }
+
+        this.scene.tweens.add({
+            targets: this.sprite,
+            scale: this.stretch,
+            duration: 200
+        });
+
+        this.scene.time.delayedCall(200, this.setScale(this.stretch));
     }
 }
 
 // specific maker for ramp object
 function RampMaker(scene, jsonObj) {
     let obj = new Ramp(scene, scene.objSpawn, jsonObj.y, scene.belt);
-    obj.Place();
-    obj.sprite.body.isStatic = true;
-    obj.sprite.rotation = jsonObj.rotation;
+    //obj.sprite.x += obj.sprite.width;
     obj.saved = true;
+    obj.Place();
+    obj.saved = false;
+    //obj.sprite.body.isStatic = true;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.id = jsonObj.id;
 
     return obj;
 }

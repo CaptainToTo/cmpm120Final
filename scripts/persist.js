@@ -16,7 +16,8 @@ class Maker {
             Weatherable: WeatherableMaker,
             Bedrock: BedrockMaker,
             JumpPad: JumpPadMaker,
-            Ramp: RampMaker
+            Ramp: RampMaker,
+            LoadList: LoadListMaker
         }
     }
 
@@ -52,4 +53,95 @@ class Loader {
         const jsonObj = object.JSON(); // object JSON() method returns json object of attributes that should be saved
         localStorage.setItem(String(key), JSON.stringify(jsonObj)); // store object
     }
+}
+
+// =====================================================================
+
+// list containing load order for placeable objects, ordered by x coord
+class LoadList {
+    constructor(scene, prefix) {
+        this.Loader = new Loader(scene);
+
+        let jsonObj = this.Loader.Load(prefix + "List");
+        
+
+        this.scene = scene;
+        this.prefix = prefix; // prefix added to storage keys
+        this.list = []; // list of ints, where each int is the next load point for an object
+        this.index = 0; // current next obj to be loaded
+        if (jsonObj != null) { // if list already exists
+            console.log("LoadList: ", jsonObj.list);
+            this.list = jsonObj.list;
+
+            for (; placeablesIDs < this.list.length;) {
+                placeablesIDs++;
+            }
+        }
+        
+    }
+
+    // check if the next element in the list should be loaded, returns the instance of that object
+    Load(x) {
+        if (this.list.length == 0) return null;
+        if (this.index >= this.list.length) return null;
+        if (x < this.list[this.index].x) return null; // return null if next object shouldn't be loaded yet
+
+        let obj = this.Loader.Load(this.prefix + String(this.list[this.index].id));
+        this.index += 1;
+        return obj;
+    }
+
+    // sorts new element in list, assume inserted at back
+    Sort() {
+        if (this.list.length <= 1) return null;
+        let i = this.list.length - 1;
+        while(i > 0) {
+            if (this.list[i].id == this.list[i - 1].id) {
+                this.list[i - 1] = this.list[i];
+                this.list.splice(i, 1);
+                return i - 1;
+            }
+
+            if (this.list[i].x < this.list[i - 1].x) { // swap
+                let temp = this.list[i];
+                this.list[i] = this.list[i - 1];
+                this.list[i - 1] = temp;
+                i -= 1;
+            } else {
+                return i;
+            }
+        }
+    }
+
+    // insert a new item, and save it in local storage
+    Insert(obj) {
+        console.log(obj);
+        // insert x coord
+        this.list.push({
+            id: obj.id,
+            x: this.scene.progress - (this.scene.objSpawn - obj.sprite.x)
+        });
+        let i = this.Sort();
+        if (i == null) i = 0;
+
+        // save obj, and update list in storage
+        this.Loader.Save(this.prefix + String(this.list[i].id), obj);
+        this.Loader.Save(this.prefix + "List", this);
+
+        this.index += 1;
+    }
+
+    // convert list to json object
+    JSON() {
+        const obj = {
+            objectType: "LoadList",
+            list: this.list
+        };
+        return obj;
+    }
+}
+
+// LoadList specific maker, only used to fetch jsonObj in LoadList constructor
+function LoadListMaker(scene, jsonObj) {
+    return jsonObj;
 }
