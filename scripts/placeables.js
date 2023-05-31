@@ -16,6 +16,7 @@ class Placeable {
 
         this.originalScale = 1; // original scale for keeping animations consistent
         this.stretch = stretch; // scale to change to when object is placed
+        this.setScale(0.5);
 
         this.placed = false;    // tracks if object has been placed
         this.grabbed = false;   // player is currently placing object
@@ -75,14 +76,14 @@ class Placeable {
         this.scene.matter.add.gameObject(this.sprite); // add sprite to physics
         this.scene.placed.push(this); // add self to scene's list of placed objects
 
-        // animate stretch
+        /* animate stretch
         this.scene.tweens.add({
             targets: this.sprite,
             scale: this.stretch,
             duration: 200
         });
 
-        this.scene.time.delayedCall(200, this.setScale(this.stretch));
+        this.scene.time.delayedCall(200, this.setScale(this.stretch));*/
     }
 
     // changes sprite scale and originalScale
@@ -116,7 +117,7 @@ function PlaceableMaker(scene, jsonObj, sprite) {
 }*/
 
 // bomb
-class Bomb {
+class Bomb extends Placeable {
     constructor(scene, x, y, belt, stretch=2) {
         super(scene, x, y, "bomb", belt, stretch);
         this.objectType = "Bomb";
@@ -127,27 +128,26 @@ class Bomb {
         this.sprite.body.isStatic = true;
 
         // check for collisions
-        for (let i = 0; i < scene.boxQueue.length; i++) {
-            const col = Matter.SAT.collides(this.sprite.body, scene.boxQueue[i].sprite.body);
+        for (let i = 0; i < this.scene.boxQueue.length; i++) {
+            const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
 
-            if (col.collided) {
-                if (scene.boxQueue[i].objectType == "Bedrock") continue;
+            if (col) {
+                if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: exploding animation
-                scene.boxQueue[i].Demolish();
+                this.scene.boxQueue[i].Demolish();
                 break;
             }
         }
         
         // destroy
         this.scene.time.delayedCall( 500, () => {
-            this.sprite.destroy();
-            this = null;
+            this.scene.removeObject(this.scene.placed.indexOf(this));
         });
     }
 }
 
 // water bucket
-class WaterBucket {
+class WaterBucket extends Placeable {
     constructor(scene, x, y, belt, stretch=2) {
         super(scene, x, y, "waterbucket", belt, stretch);
         this.objectType = "WaterBucket";
@@ -155,31 +155,45 @@ class WaterBucket {
 
     Place() {
         super.Place();
-        this.sprite.body.isStatice = true;
+        this.sprite.body.isStatic = true;
         
         // check for collisions
-        for (let i = 0; i < scene.boxQueue.length; i++) {
-            const col = Matter.SAT.collides(this.sprite.body, scene.boxQueue[i].sprite.body);
+        let self = this;
+        this.scene.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+            console.log("collided");
+            for (let i = 0; i < self.scene.boxQueue.length; i++) {
+                if (bodyA == self.sprite.body && bodyB == self.scene.boxQueue[i].sprite.body) {
+                    console.log("waterbucket found");
+                    if (self.scene.boxQueue[i].objectType == "Bedrock") return;
+                    // TODO: weathering animation
+                    self.scene.boxQueue[i].Weather();
+                }
+            }
+        });
 
-            if (col.collided) {
-                if (scene.boxQueue[i].objectType == "Bedrock") continue;
+        /*
+        for (let i = 0; i < this.scene.boxQueue.length; i++) {
+            const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
+            
+            if (col) {
+                if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: weathering animation
-                scene.boxQueue[i].Weather();
+                this.scene.boxQueue[i].Weather();
                 break;
             }
-        }
+        }*/
         
         // destroy
         this.scene.time.delayedCall( 500, () => {
-            this.sprite.destroy();
-            this = null;
+            // remove object from placed list
+            this.scene.removeObject(this.scene.placed.indexOf(this));
         });
     }
 }
 
 
 // jump pad
-class JumpPad {
+class JumpPad extends Placeable {
     constructor(scene, x, y, belt, stretch) {
         super(scene, x, y, "jumppad", belt, stretch);
         this.objectType = "JumpPad";
@@ -198,7 +212,7 @@ function JumpPadMaker(scene, jsonObj) {
 }
 
 // ramp up
-class Ramp {
+class Ramp extends Placeable {
     constructor(scene, x, y, belt, stretch=2) {
         super(scene, x, y, "ramp", belt, stretch);
         this.objectType = "Ramp";

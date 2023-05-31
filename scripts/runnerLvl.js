@@ -16,7 +16,7 @@ class RunnerLevel extends Phaser.Scene {
         this.maxHeight = maxHeight; // max height of a box
         this.minHeight = minHeight; // min height of a box
         this.demolishHeight = minHeight; // height obstacles will be set at when demolished
-        // probabilities of each obst object type being generated, must add up to 1
+        // probabilities of each obstacle object type being generated, must add up to 1
         this.probs = [
             {prob: 0.2, type: Explodable},
             {prob: 0.7, type: Weatherable},
@@ -32,7 +32,18 @@ class RunnerLevel extends Phaser.Scene {
 
     preload() {
         this.load.path = "assets/";
-        this.load.image("block", "placeholder.JPG");
+
+        // environment blocks
+        this.load.image("explodable", "explodable.png");
+        this.load.image("weatherable", "weatherable.png");
+        this.load.image("bedrock", "bedrock.png");
+
+        // placeables
+        this.load.image("bomb", "bomb.png");
+        this.load.image("waterbucket", "waterbucket.png");
+        this.load.image("jumppad", "jumppad.png");
+        this.load.image("ramp", "ramp.png");
+
         this.load.image("belt", "belt-placeholder.png");
     }
 
@@ -50,20 +61,20 @@ class RunnerLevel extends Phaser.Scene {
             return obj;
         }
 
+        // generate new blocks
         const pick = this.rand(); // random number from [0, 1)
-        
         let total = 0;
         for (let i = 0; i < this.probs.length; i++) {
             total += this.probs[i].prob;
             if (pick < total) {
-                return new this.probs[i].type(this, x, y, width, height, sprite, this.demolishHeight);
+                return new this.probs[i].type(this, x, y, width, height, this.demolishHeight);
             }
         }
     }
 
     create() {
         this.boxQueue.push(
-            this.addBox(this.mid, this.base, this.width, this.maxWidth / 2)
+            this.addBox(this.mid, this.base, this.width, this.minHeight)
         );
 
         // create conveyer belt
@@ -83,7 +94,7 @@ class RunnerLevel extends Phaser.Scene {
 
         // update box positions
         for(let i = 0; i < this.boxQueue.length; i++) {
-            this.boxQueue[i].x -= this.speed * delta;
+            this.boxQueue[i].sprite.x -= this.speed * delta;
         }
 
         // update progress
@@ -111,15 +122,15 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // check if next block should be created, create a new block if the last block is partially on screen
-        if(this.boxQueue[this.boxQueue.length - 1].x <= this.width) {
+        if(this.boxQueue[this.boxQueue.length - 1].sprite.x <= this.width) {
             this.boxQueue.push(
-                this.addBox(this.boxQueue[this.boxQueue.length - 1].x + (this.boxQueue[this.boxQueue.length - 1].width/2), 
+                this.addBox(this.boxQueue.at(-1).sprite.x + (this.boxQueue.at(-1).sprite.width/2), 
                     this.base)
             )
         }
 
         // check if last box should be removed, remove if 2nd to last box is partially off screen
-        if(this.boxQueue[1].x <= -this.maxWidth) {
+        if(this.boxQueue[1].sprite.x <= -this.maxWidth) {
             let temp = this.boxQueue.shift();
             this.loader.Save("O" + String(this.progress - 570), temp);
             temp.sprite.destroy();

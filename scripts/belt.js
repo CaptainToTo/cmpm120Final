@@ -14,7 +14,7 @@ class Belt {
         
         // visual formatting for organizing objects on conveyer belt
         this.scaleWidth = (this.sprite.width * this.scale);
-        this.spacing = 100; // space placed in between objects
+        this.spacing = 50; // space placed in between objects
         this.margin = this.sprite.x - (this.scaleWidth / 2) + 150; // stopping point for first object on belt in global space
         this.spawn = this.sprite.x + (this.scaleWidth / 2) + 200; // x coord where objects will be instantiated
         this.speed = 0.5;  // speed objects move at down the belt
@@ -68,7 +68,7 @@ class Belt {
         // check if new objects should be added
         if (this.objects.length < this.max) {
             this.objects.push( // TODO: make random placeable subclass
-                new Placeable(this.scene, this.spawn, this.sprite.y, "block", this)
+                this.NewObject()
             );
         }
 
