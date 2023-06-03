@@ -78,17 +78,6 @@ class Placeable {
         this.belt.removeObject(this); // remove from conveyer belt
         this.sprite.body.isStatic = false; // add sprite to physics
         this.scene.placed.push(this); // add self to scene's list of placed objects
-
-        
-
-        /* animate stretch
-        this.scene.tweens.add({
-            targets: this.sprite,
-            scale: this.stretch,
-            duration: 200
-        });
-
-        this.scene.time.delayedCall(200, this.setScale(this.stretch));*/
     }
 
     // changes sprite scale and originalScale
@@ -110,17 +99,6 @@ class Placeable {
         return obj;
     }
 }
-
-/* specific maker for
-function PlaceableMaker(scene, jsonObj, sprite) {
-    let obj = new Placeable(scene, scene.objSpawn, jsonObj.y, sprite, scene.belt);
-    obj.Place();
-    obj.sprite.body.isStatic = true;
-    obj.sprite.rotation = jsonObj.rotation;
-    obj.saved = true;
-
-    return obj;
-}*/
 
 // bomb
 class Bomb extends Placeable {
@@ -163,21 +141,7 @@ class WaterBucket extends Placeable {
         super.Place();
         this.sprite.body.isStatic = true;
         
-        // check for collisions
-        /*let self = this;
-        this.scene.matter.world.on('collisionactive', (event, bodyA, bodyB) => {
-            console.log("collided");
-            for (let i = 0; i < self.scene.boxQueue.length; i++) {
-                if (bodyA == self.sprite.body && bodyB == self.scene.boxQueue[i].sprite.body) {
-                    console.log("waterbucket found");
-                    if (self.scene.boxQueue[i].objectType == "Bedrock") return;
-                    // TODO: weathering animation
-                    self.scene.boxQueue[i].Weather();
-                }
-            }
-        });*/
-
-        
+        // check for collisions with blocks
         for (let i = 0; i < this.scene.boxQueue.length; i++) {
             const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
             
@@ -226,11 +190,9 @@ class JumpPad extends Placeable {
 // specific maker for jump pad object
 function JumpPadMaker(scene, jsonObj) {
     let obj = new JumpPad(scene, scene.objSpawn, jsonObj.y, scene.belt);
-    //obj.sprite.x += obj.sprite.width;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    //obj.sprite.body.isStatic = true;
     obj.sprite.rotation = jsonObj.rotation;
     obj.id = jsonObj.id;
 
@@ -266,11 +228,9 @@ class Ramp extends Placeable {
 // specific maker for ramp object
 function RampMaker(scene, jsonObj) {
     let obj = new Ramp(scene, scene.objSpawn, jsonObj.y, scene.belt);
-    //obj.sprite.x += obj.sprite.width;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    //obj.sprite.body.isStatic = true;
     obj.sprite.rotation = jsonObj.rotation;
     obj.id = jsonObj.id;
 

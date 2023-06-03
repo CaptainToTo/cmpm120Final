@@ -14,7 +14,6 @@ class Obstacle {
     }
 
     Demolish() {
-        console.log("demoish")
         // TODO: demolish animation
         let temp = this.sprite.height;
         this.sprite.height = this.demolishedHeight;
@@ -76,7 +75,6 @@ class Explodable extends Obstacle {
 
 // specific maker for explodable class
 function ExplodableMaker(scene, jsonObj) {
-    console.log("weather")
     const width = jsonObj.width;
     const height = jsonObj.height;
     let obj = new Explodable(scene, 

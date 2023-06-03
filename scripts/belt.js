@@ -67,9 +67,7 @@ class Belt {
 
         // check if new objects should be added
         if (this.objects.length < this.max) {
-            this.objects.push( // TODO: make random placeable subclass
-                this.NewObject()
-            );
+            this.objects.push(this.NewObject());
         }
 
         // move existing objects
