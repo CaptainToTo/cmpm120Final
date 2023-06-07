@@ -7,6 +7,7 @@ class Obstacle {
         this.sprite = scene.add.tileSprite(x + width/2, y, width, height, sprite).setOrigin(0.5, 0.5);
         scene.matter.add.gameObject(this.sprite);
         this.sprite.body.isStatic = true;
+        this.sprite.setCollisionCategory(scene.floorLayer);
         this.scene = scene;
         this.demolishedHeight = demolishedHeight;
         this.saved = false;

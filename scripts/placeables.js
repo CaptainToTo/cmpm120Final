@@ -9,6 +9,7 @@ class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=1) {
         this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
         this.sprite.body.isStatic = true;
+        this.sprite.setCollisionCategory(scene.floorLayer);
         this.source = sprite; // the source image string
         this.scene = scene;
 

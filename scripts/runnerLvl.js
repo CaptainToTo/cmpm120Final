@@ -1,5 +1,5 @@
 class RunnerLevel extends Phaser.Scene {
-    constructor(name="RunnerLevel", seed="12345", speed=0.25, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
+    constructor(name="RunnerLevel", seed="12345", speed=0.3, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
         super(name);
         this.rand = new Math.seedrandom(seed); // this.rand() returns random number from 0 to 1
 
@@ -8,6 +8,8 @@ class RunnerLevel extends Phaser.Scene {
         this.width = game.config.width;
         this.mid = this.width / 2;
 
+        this.maxSpeed = speed; // max speed level can move at
+        this.slowest = 0.15; // slowest speed platforms will move at
         this.speed = speed; // speed platforms will move at (and objects)
 
         this.boxQueue = []; // queue containing platform boxes, .push(item) to enqueue, .shift() to dequeue
@@ -31,6 +33,8 @@ class RunnerLevel extends Phaser.Scene {
 
         this.loader = new Loader(this); // obstacles loader list
         this.blockNo = 0; //index of the next block to be loader
+
+        this.start = this.width/2; // start point for player
     }
 
     preload() {
@@ -48,6 +52,10 @@ class RunnerLevel extends Phaser.Scene {
         this.load.image("ramp", "ramp.png");
 
         this.load.image("belt", "belt-placeholder.png");
+
+        // player
+        this.load.image("minecart", "minecart.png");
+        this.load.image("wheel", "wheel.png");
     }
 
     addBox(x, y, width=0, height=0) {
@@ -80,12 +88,17 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     create() {
+        this.floorLayer = this.matter.world.nextCategory();
+
         this.boxQueue.push(
             this.addBox(this.mid, this.base, this.width, this.minHeight)
         );
 
         // create conveyer belt
         this.belt = new Belt(this, this.width * 0.7, this.base * 0.1);
+        
+        // create player
+        this.player = new Player(this, this.start, this.base/2);
     }
 
     // remove object from placed list
@@ -97,6 +110,17 @@ class RunnerLevel extends Phaser.Scene {
 
     // delta contains the time since the last frame update
     update(time, delta) {
+        this.player.Structure(); // keep player together, and moving
+
+        // change speed for minecart to get back to start point
+        let ratio = this.maxSpeed * (this.player.x / this.start);
+        this.speed = ratio < this.slowest ? this.slowest: ratio; // cap speed at slowest
+
+        // check for game over
+        if (this.player.x < this.player.threshold) {
+            console.log("game over"); // TODO: create actual game over
+        }
+
         this.belt.Update(delta); // run update function for belt
 
         // update box positions
