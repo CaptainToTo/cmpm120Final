@@ -7,6 +7,7 @@ class Obstacle {
         this.sprite = scene.add.tileSprite(x + width/2, y, width, height, sprite).setOrigin(0.5, 0.5);
         scene.matter.add.gameObject(this.sprite);
         this.sprite.body.isStatic = true;
+        this.sprite.setCollisionCategory(scene.floorLayer);
         this.scene = scene;
         this.demolishedHeight = demolishedHeight;
         this.saved = false;
@@ -14,7 +15,6 @@ class Obstacle {
     }
 
     Demolish() {
-        console.log("demoish")
         // TODO: demolish animation
         let temp = this.sprite.height;
         this.sprite.height = this.demolishedHeight;
@@ -76,7 +76,6 @@ class Explodable extends Obstacle {
 
 // specific maker for explodable class
 function ExplodableMaker(scene, jsonObj) {
-    console.log("weather")
     const width = jsonObj.width;
     const height = jsonObj.height;
     let obj = new Explodable(scene, 
