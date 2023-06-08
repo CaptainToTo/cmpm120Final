@@ -169,6 +169,15 @@ class JumpPad extends Placeable {
         super(scene, x, y, "jumppad", belt, stretch);
         this.objectType = "JumpPad";
         this.origY = y; // used to check if placeable has moved
+
+        // change hitbox
+        this.sprite.body.vertices[0].y += (this.sprite.height/1.1) * 0.5;
+        //this.sprite.body.vertices[0].x += (this.sprite.width/5) * 0.5;
+
+        this.sprite.body.vertices[1].y += (this.sprite.height/1.1) * 0.5;
+        //this.sprite.body.vertices[1].x -= (this.sprite.width/5) * 0.5;
+
+        this.sprite.setMass(50);
     }
 
     Place() {
@@ -206,7 +215,8 @@ class Ramp extends Placeable {
         super(scene, x, y, "ramp", belt, stretch);
         this.objectType = "Ramp";
         this.origY = y; // used to check if placeable has moved
-        // TODO: change hitbox to triangle
+        // change hitbox to triangle
+        this.sprite.body.vertices.splice(0, 1);
     }
 
     Place() {

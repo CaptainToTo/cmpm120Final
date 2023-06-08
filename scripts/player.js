@@ -6,7 +6,7 @@ class Player {
         this.y = y;
         this.h = 0;
         this.w = 80;
-        this.t = 0.2;
+        this.t = 0.4;
 
         // build sprite
         this.minecart = scene.add.sprite(this.x, this.y, "minecart").setOrigin(0.5, 1);
@@ -74,9 +74,12 @@ class Player {
         this.y = this.minecart.y;
 
         // set the torque of the front wheel, stop if minecart is at the front of the scene
-        if (this.x < this.scene.width - 200) {
+        if (this.x < this.scene.width/1.5) {
             this.frontWheel.body.torque = this.t;
             this.backWheel.body.torque = this.t;
+        } else {
+            this.frontWheel.body.torque = 0;
+            this.backWheel.body.torque = 0;
         }
     }
 }
