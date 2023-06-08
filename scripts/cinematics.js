@@ -9,25 +9,15 @@ class Title extends Phaser.Scene {
 
     create() {
         // create a new text object
-        let titleText = this.add.text(-game.config.width, 250, 'Cinematics scene...', {
-            fontFamily: 'Brush Script MT',
-            fontSize: 90,
+        let bg = this.add.rectangle (1920/2, 1080/2, 1920, 1080, "0x005b37")
+        let titleText = this.add.text(700, 450, 'ChronoCart', {
+            fontSize: 120,
             color: '#dd571c'
         });
 
         // create a tween to move the text from left to right
-        this.tweens.add({
-            targets: titleText,
-            x: game.config.width / 2 - titleText.width / 2,
-            ease: 'Power1',
-            duration: 1000,
-            delay: 1000
-        });
-
-        // Camera fade out after a delay of 4000 ms, fade-out lasting 2500 ms
-        this.time.delayedCall(4000, function () {
-            this.cameras.main.fadeOut(2500);
-        }, [], this);
+        this.cameras.main.zoomTo(1, 3000, 'Back.easeOut', false, (camera, progress) => this.cameras.main.setTintFill());
+        this.cameras.main.shake(1500, new Phaser.Math.Vector2(0.005, 0.02));
     }
 }
 
