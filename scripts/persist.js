@@ -115,7 +115,6 @@ class LoadList {
 
     // insert a new item, and save it in local storage
     Insert(obj) {
-        console.log(obj);
         // insert x coord
         this.list.push({
             id: obj.id,

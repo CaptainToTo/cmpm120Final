@@ -171,11 +171,11 @@ class JumpPad extends Placeable {
         this.origY = y; // used to check if placeable has moved
 
         // change hitbox
-        this.sprite.body.vertices[0].y += (this.sprite.height/1.1) * 0.5;
-        //this.sprite.body.vertices[0].x += (this.sprite.width/5) * 0.5;
+        this.sprite.body.vertices[0].y += (this.sprite.height/2) * 0.5;
+        this.sprite.body.vertices[0].x += (this.sprite.width/1.5) * 0.5;
 
-        this.sprite.body.vertices[1].y += (this.sprite.height/1.1) * 0.5;
-        //this.sprite.body.vertices[1].x -= (this.sprite.width/5) * 0.5;
+        this.sprite.body.vertices[1].y += (this.sprite.height/2) * 0.5;
+        //this.sprite.body.vertices[1].x -= (this.sprite.width/2) * 0.5;
 
         this.sprite.setMass(50);
     }
@@ -192,6 +192,19 @@ class JumpPad extends Placeable {
             scale: this.stretch,
             duration: 200
         });
+
+        let self = this;
+        this.scene.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
+            if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
+                (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
+                    console.log(self.sprite.x - self.scene.player.frontWheel.x)
+                    self.scene.player.frontWheel.setVelocity(50, -10);
+                if (self.sprite.x - self.scene.player.frontWheel.x <= 50) {
+                    console.log("hit");
+                    
+                }
+            }
+        })
 
         this.scene.time.delayedCall(200, this.setScale(this.stretch));
     }
