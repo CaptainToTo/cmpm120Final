@@ -9,7 +9,7 @@ class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=1) {
         this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
         this.sprite.body.isStatic = true;
-        this.sprite.setCollisionCategory(scene.floorLayer);
+        this.sprite.setCollisionCategory(0x0000);
         this.source = sprite; // the source image string
         this.scene = scene;
 
@@ -78,6 +78,7 @@ class Placeable {
 
         this.belt.removeObject(this); // remove from conveyer belt
         this.sprite.body.isStatic = false; // add sprite to physics
+        this.sprite.setCollisionCategory(this.scene.floorLayer);
         this.scene.placed.push(this); // add self to scene's list of placed objects
     }
 
