@@ -110,6 +110,7 @@ class RunnerLevel extends Phaser.Scene {
                     this.scene.resume();
                 } else {
                     this.scene.pause();
+                    localStorage.clear();
                 }
             });
     }
@@ -124,6 +125,10 @@ class RunnerLevel extends Phaser.Scene {
     // delta contains the time since the last frame update
     update(time, delta) {
         this.player.Structure(); // keep player together, and moving
+        if (this.player.isStuck(this.boxQueue)) { // check if player has hit a wall
+            console.log("gameOver");
+            this.scene.pause(); // TODO: replace with actual game over
+        }
 
         if (this.speed < this.maxSpeed) {
             this.speed += this.rate * delta; // increase speed
@@ -147,9 +152,8 @@ class RunnerLevel extends Phaser.Scene {
             this.placed[i].sprite.x -= this.speed * delta; // update position
 
             // save object
-            if(this.placed[i].sprite.x <= -this.placed[i].sprite.width) {
+            if(this.placed[i].sprite.x <= 0) {
                 if (!this.placed[i].saved) {
-                    //console.log(this.progress, (this.objSpawn - this.placed[i].sprite.x))
                     this.pList.Insert(this.placed[i]);
                     this.placed[i].saved = true;
                 }
@@ -162,7 +166,7 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // check if next block should be created, create a new block if the last block is partially on screen
-        if(this.boxQueue[this.boxQueue.length - 1].sprite.x <= this.width) {
+        if(this.boxQueue.at(-1).sprite.x <= this.width) {
             this.boxQueue.push(
                 this.addBox(this.boxQueue.at(-1).sprite.x + (this.boxQueue.at(-1).sprite.width/2), 
                     this.base)

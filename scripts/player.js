@@ -85,19 +85,16 @@ class Player {
         this.backWheel.body.torque = this.t;
     }
 
-    isStuck(delta) {
-        if (this.frontWheel.body.velocity.x < this.threshold) { // cart is stuck
-            if (this.stuckTime >= stuckTimeoutDuration) { // timer is up
-                console.log("game over");
-                return true; // TODO: create actual game over
-            } else {
-                this.stuckTime += delta; // increment timer
-                return false;
+    // check if minecart has hit a wall
+    isStuck(boxQueue) {
+        for (let i = 0; i < boxQueue.length; i++) {
+            const body = boxQueue[i].sprite.body;
+
+            if (this.scene.matter.containsPoint(body, this.frontWheel.x, this.frontWheel.y)) {
+                return true;
             }
-        } else { // cart is still moving
-            this.stuckTime = 0; // reset timer
-            return false;
         }
+        return false;
     }
 }
 

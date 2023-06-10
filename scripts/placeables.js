@@ -185,6 +185,8 @@ class JumpPad extends Placeable {
         if (!this.saved) {
             this.id = placeablesIDs;
             placeablesIDs += 1;
+            // save object
+            this.scene.pList.Insert(this);
         }
 
         this.scene.tweens.add({
@@ -197,12 +199,7 @@ class JumpPad extends Placeable {
         this.scene.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
                 (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
-                    console.log(self.sprite.x - self.scene.player.frontWheel.x)
                     self.scene.player.frontWheel.setVelocity(50, -10);
-                if (self.sprite.x - self.scene.player.frontWheel.x <= 50) {
-                    console.log("hit");
-                    
-                }
             }
         })
 
@@ -213,11 +210,11 @@ class JumpPad extends Placeable {
 // specific maker for jump pad object
 function JumpPadMaker(scene, jsonObj) {
     let obj = new JumpPad(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.id = jsonObj.id;
+    obj.sprite.rotation = jsonObj.rotation;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    obj.sprite.rotation = jsonObj.rotation;
-    obj.id = jsonObj.id;
 
     return obj;
 }
@@ -237,6 +234,8 @@ class Ramp extends Placeable {
         if (!this.saved) {
             this.id = placeablesIDs;
             placeablesIDs += 1;
+            // save object
+            this.scene.pList.Insert(this);
         }
 
         this.scene.tweens.add({
@@ -252,11 +251,11 @@ class Ramp extends Placeable {
 // specific maker for ramp object
 function RampMaker(scene, jsonObj) {
     let obj = new Ramp(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.id = jsonObj.id;
+    obj.sprite.rotation = jsonObj.rotation;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    obj.sprite.rotation = jsonObj.rotation;
-    obj.id = jsonObj.id;
 
     return obj;
 }

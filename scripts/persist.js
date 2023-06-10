@@ -70,14 +70,14 @@ class LoadList {
         this.list = []; // list of ints, where each int is the next load point for an object
         this.index = 0; // current next obj to be loaded
         if (jsonObj != null) { // if list already exists
-            console.log("LoadList: ", jsonObj.list);
+            
             this.list = jsonObj.list;
 
             for (; placeablesIDs < this.list.length;) {
                 placeablesIDs++;
             }
         }
-        
+        console.log("LoadList: ", this.list);
     }
 
     // check if the next element in the list should be loaded, returns the instance of that object
@@ -88,6 +88,7 @@ class LoadList {
 
         let obj = this.Loader.Load(this.prefix + String(this.list[this.index].id));
         this.index += 1;
+        
         return obj;
     }
 
@@ -123,12 +124,14 @@ class LoadList {
             if (this.list[left] != undefined) {
                 if (this.list[left].id == this.list[j].id) {
                     this.list.splice(left, 1);
+                    j -= 1;
                 }
             }
 
             if (this.list[right] != undefined) {
                 if (this.list[right].id == this.list[j].id) {
                     this.list.splice(right, 1);
+                    j -= 1;
                 }
             }
         }
@@ -138,6 +141,8 @@ class LoadList {
 
     // insert a new item, and save it in local storage
     Insert(obj) {
+        let orig_len = this.list.length; // save length for comparison
+
         // insert x coord
         this.list.push({
             id: obj.id,
@@ -150,7 +155,9 @@ class LoadList {
         this.Loader.Save(this.prefix + String(this.list[i].id), obj);
         this.Loader.Save(this.prefix + "List", this);
 
-        this.index += 1;
+        // prevents immediately loading newly placed objs
+        // only skip to next item if a new placeable has been added to the list
+        if (orig_len < this.list.length) this.index += 1;
     }
 
     // convert list to json object
