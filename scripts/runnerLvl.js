@@ -1,7 +1,7 @@
 class RunnerLevel extends Phaser.Scene {
-    constructor(name="RunnerLevel", seed="12345", speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
+    constructor(name="RunnerLevel", /*seed="12345",*/ speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
         super(name);
-        this.rand = new Math.seedrandom(seed); // this.rand() returns random number from 0 to 1
+        this.rand = new Math.seedrandom(String(Math.random())); // this.rand() returns random number from 0 to 1
 
         // screen size vars
         this.base = game.config.height;
