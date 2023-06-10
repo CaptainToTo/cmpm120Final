@@ -95,8 +95,10 @@ class LoadList {
     Sort() {
         if (this.list.length <= 1) return null;
         let i = this.list.length - 1;
+        let j = 0; // found index where element is placed
+
         while(i > 0) {
-            if (this.list[i].id == this.list[i - 1].id) {
+            if (this.list[i].id == this.list[i - 1].id) { // if duplicate has been found
                 this.list[i - 1] = this.list[i];
                 this.list.splice(i, 1);
                 return i - 1;
@@ -107,10 +109,31 @@ class LoadList {
                 this.list[i] = this.list[i - 1];
                 this.list[i - 1] = temp;
                 i -= 1;
-            } else {
-                return i;
+            } else { // sorted order has been found
+                j = i;
+                break
             }
         }
+
+        // search for duplicate in adjacent objects
+        for (let i = 1; i < 10; i++) {
+            let left = j - i;
+            let right = j + i;
+
+            if (this.list[left] != undefined) {
+                if (this.list[left].id == this.list[j].id) {
+                    this.list.splice(left, 1);
+                }
+            }
+
+            if (this.list[right] != undefined) {
+                if (this.list[right].id == this.list[j].id) {
+                    this.list.splice(right, 1);
+                }
+            }
+        }
+
+        return j;
     }
 
     // insert a new item, and save it in local storage

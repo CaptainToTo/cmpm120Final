@@ -100,6 +100,18 @@ class RunnerLevel extends Phaser.Scene {
         
         // create player
         this.player = new Player(this, this.start, this.base/2);
+
+        // pause button TODO: encapsulate in class
+        this.paused = false; // tru if paused
+        let pauseButton = this.add.text(100, 100, "⏸️", { fontSize: 100 })
+            .setInteractive({ useHandCursor: true })
+            .on('pointerdown', () => {
+                if (this.paused) {
+                    this.scene.resume();
+                } else {
+                    this.scene.pause();
+                }
+            });
     }
 
     // remove object from placed list
