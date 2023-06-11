@@ -9,7 +9,7 @@ class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=1) {
         this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
         this.sprite.body.isStatic = true;
-        this.sprite.setCollisionCategory(scene.floorLayer);
+        this.sprite.setCollisionCategory(0x0000);
         this.source = sprite; // the source image string
         this.scene = scene;
 
@@ -78,6 +78,7 @@ class Placeable {
 
         this.belt.removeObject(this); // remove from conveyer belt
         this.sprite.body.isStatic = false; // add sprite to physics
+        this.sprite.setCollisionCategory(this.scene.floorLayer);
         this.scene.placed.push(this); // add self to scene's list of placed objects
     }
 
@@ -171,11 +172,11 @@ class JumpPad extends Placeable {
         this.origY = y; // used to check if placeable has moved
 
         // change hitbox
-        this.sprite.body.vertices[0].y += (this.sprite.height/1.1) * 0.5;
-        //this.sprite.body.vertices[0].x += (this.sprite.width/5) * 0.5;
+        this.sprite.body.vertices[0].y += (this.sprite.height/2) * 0.5;
+        this.sprite.body.vertices[0].x += (this.sprite.width/1.5) * 0.5;
 
-        this.sprite.body.vertices[1].y += (this.sprite.height/1.1) * 0.5;
-        //this.sprite.body.vertices[1].x -= (this.sprite.width/5) * 0.5;
+        this.sprite.body.vertices[1].y += (this.sprite.height/2) * 0.5;
+        //this.sprite.body.vertices[1].x -= (this.sprite.width/2) * 0.5;
 
         this.sprite.setMass(50);
     }
@@ -185,6 +186,8 @@ class JumpPad extends Placeable {
         if (!this.saved) {
             this.id = placeablesIDs;
             placeablesIDs += 1;
+            // save object
+            this.scene.pList.Insert(this);
         }
 
         this.scene.tweens.add({
@@ -193,6 +196,14 @@ class JumpPad extends Placeable {
             duration: 200
         });
 
+        let self = this;
+        this.scene.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
+            if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
+                (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
+                    self.scene.player.frontWheel.setVelocity(50, -10);
+            }
+        })
+
         this.scene.time.delayedCall(200, this.setScale(this.stretch));
     }
 }
@@ -200,11 +211,11 @@ class JumpPad extends Placeable {
 // specific maker for jump pad object
 function JumpPadMaker(scene, jsonObj) {
     let obj = new JumpPad(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.id = jsonObj.id;
+    obj.sprite.rotation = jsonObj.rotation;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    obj.sprite.rotation = jsonObj.rotation;
-    obj.id = jsonObj.id;
 
     return obj;
 }
@@ -224,6 +235,8 @@ class Ramp extends Placeable {
         if (!this.saved) {
             this.id = placeablesIDs;
             placeablesIDs += 1;
+            // save object
+            this.scene.pList.Insert(this);
         }
 
         this.scene.tweens.add({
@@ -239,11 +252,11 @@ class Ramp extends Placeable {
 // specific maker for ramp object
 function RampMaker(scene, jsonObj) {
     let obj = new Ramp(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.id = jsonObj.id;
+    obj.sprite.rotation = jsonObj.rotation;
     obj.saved = true;
     obj.Place();
     obj.saved = false;
-    obj.sprite.rotation = jsonObj.rotation;
-    obj.id = jsonObj.id;
 
     return obj;
 }

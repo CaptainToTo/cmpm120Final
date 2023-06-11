@@ -6,12 +6,17 @@ class Player {
         this.y = y;
         this.h = 0;
         this.w = 80;
-        this.t = 0.4;
+        this.t = 0.2;
+
+        this.stuckTime = 0;
+        this.stuckTimeoutDuration = 500;
 
         // build sprite
         this.minecart = scene.add.sprite(this.x, this.y, "minecart").setOrigin(0.5, 1);
+
         this.frontWheel = scene.matter.add.sprite(this.x + this.w, this.y + this.h, "wheel").setOrigin(0.5, 0.5);
         this.frontWheel.setCircle();
+        //this.frontWheel.setFriction(1, 0.0001);
         //this.frontWheel.setMass(1);
 
         this.backWheel = scene.matter.add.sprite(this.x - this.w, this.y + this.h, "wheel").setOrigin(0.5, 0.5);
@@ -41,6 +46,8 @@ class Player {
 
     // called by scene update(), keeps minecart attached to wheels, all positions depend on front wheel
     Structure() {
+        this.frontWheel.x = this.start;
+
         // get distance between wheels
         let diff = {
             x: this.frontWheel.x - this.backWheel.x,
@@ -74,13 +81,20 @@ class Player {
         this.y = this.minecart.y;
 
         // set the torque of the front wheel, stop if minecart is at the front of the scene
-        if (this.x < this.scene.width/1.5) {
-            this.frontWheel.body.torque = this.t;
-            this.backWheel.body.torque = this.t;
-        } else {
-            this.frontWheel.body.torque = 0;
-            this.backWheel.body.torque = 0;
+        this.frontWheel.body.torque = this.t;
+        this.backWheel.body.torque = this.t;
+    }
+
+    // check if minecart has hit a wall
+    isStuck(boxQueue) {
+        for (let i = 0; i < boxQueue.length; i++) {
+            const body = boxQueue[i].sprite.body;
+
+            if (this.scene.matter.containsPoint(body, this.frontWheel.x, this.frontWheel.y)) {
+                return true;
+            }
         }
+        return false;
     }
 }
 

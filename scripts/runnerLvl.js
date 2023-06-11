@@ -1,7 +1,7 @@
 class RunnerLevel extends Phaser.Scene {
-    constructor(name="RunnerLevel", seed="12345", speed=0.3, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
+    constructor(name="RunnerLevel", /*seed="12345",*/ speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
         super(name);
-        this.rand = new Math.seedrandom(seed); // this.rand() returns random number from 0 to 1
+        this.rand = new Math.seedrandom(String(Math.random())); // this.rand() returns random number from 0 to 1
 
         // screen size vars
         this.base = game.config.height;
@@ -9,8 +9,9 @@ class RunnerLevel extends Phaser.Scene {
         this.mid = this.width / 2;
 
         this.maxSpeed = speed; // max speed level can move at
-        this.slowest = 0.15; // slowest speed platforms will move at
-        this.speed = speed; // speed platforms will move at (and objects)
+        this.slowest = 0.4; // slowest speed platforms will move at
+        this.speed = this.slowest; // speed platforms will move at (and objects)
+        this.rate = 0.000005; // rate speed increases
 
         this.boxQueue = []; // queue containing platform boxes, .push(item) to enqueue, .shift() to dequeue
         this.maxWidth = maxWidth; // max width of a box
@@ -34,7 +35,7 @@ class RunnerLevel extends Phaser.Scene {
         this.loader = new Loader(this); // obstacles loader list
         this.blockNo = 0; //index of the next block to be loader
 
-        this.start = this.width/2; // start point for player
+        this.start = this.width/5; // start point for player
     }
 
     preload() {
@@ -91,7 +92,7 @@ class RunnerLevel extends Phaser.Scene {
         this.floorLayer = this.matter.world.nextCategory();
 
         this.boxQueue.push(
-            this.addBox(this.mid, this.base, this.width, this.minHeight)
+            this.addBox(this.mid/2, this.base, this.width*2, this.minHeight)
         );
 
         // create conveyer belt
@@ -99,6 +100,19 @@ class RunnerLevel extends Phaser.Scene {
         
         // create player
         this.player = new Player(this, this.start, this.base/2);
+
+        // pause button TODO: encapsulate in class
+        this.paused = false; // tru if paused
+        let pauseButton = this.add.text(100, 100, "⏸️", { fontSize: 100 })
+            .setInteractive({ useHandCursor: true })
+            .on('pointerdown', () => {
+                if (this.paused) {
+                    this.scene.resume();
+                } else {
+                    this.scene.pause();
+                    localStorage.clear();
+                }
+            });
     }
 
     // remove object from placed list
@@ -111,14 +125,13 @@ class RunnerLevel extends Phaser.Scene {
     // delta contains the time since the last frame update
     update(time, delta) {
         this.player.Structure(); // keep player together, and moving
+        if (this.player.isStuck(this.boxQueue)) { // check if player has hit a wall
+            console.log("gameOver");
+            this.scene.pause(); // TODO: replace with actual game over
+        }
 
-        // change speed for minecart to get back to start point
-        let ratio = this.maxSpeed * (this.player.x / this.start);
-        this.speed = ratio < this.slowest ? this.slowest: ratio; // cap speed at slowest
-
-        // check for game over
-        if (this.player.x < this.player.threshold) {
-            console.log("game over"); // TODO: create actual game over
+        if (this.speed < this.maxSpeed) {
+            this.speed += this.rate * delta; // increase speed
         }
 
         this.belt.Update(delta); // run update function for belt
@@ -133,18 +146,14 @@ class RunnerLevel extends Phaser.Scene {
 
         // check for next placeable to be loaded
         let temp = this.pList.Load(parseInt(this.progress));
-        if (temp != null) {
-            console.log(this.progress)
-        }
 
         // update object positions, and check if any should be destroyed
         for(let i = 0; i < this.placed.length; i++) {
             this.placed[i].sprite.x -= this.speed * delta; // update position
 
             // save object
-            if(this.placed[i].sprite.x <= -this.placed[i].sprite.width) {
+            if(this.placed[i].sprite.x <= 0) {
                 if (!this.placed[i].saved) {
-                    console.log(this.progress, (this.objSpawn - this.placed[i].sprite.x))
                     this.pList.Insert(this.placed[i]);
                     this.placed[i].saved = true;
                 }
@@ -157,7 +166,7 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // check if next block should be created, create a new block if the last block is partially on screen
-        if(this.boxQueue[this.boxQueue.length - 1].sprite.x <= this.width) {
+        if(this.boxQueue.at(-1).sprite.x <= this.width) {
             this.boxQueue.push(
                 this.addBox(this.boxQueue.at(-1).sprite.x + (this.boxQueue.at(-1).sprite.width/2), 
                     this.base)
@@ -165,14 +174,16 @@ class RunnerLevel extends Phaser.Scene {
         }
 
         // check if last box should be removed, remove if 2nd to last box is partially off screen
-        if(this.boxQueue[1].sprite.x <= -this.maxWidth) {
-            let temp = this.boxQueue.shift();
-            if (!temp.saved) {
-                this.loader.Save("O" + String(temp.blockNo), temp);
-                temp.saved = true;
+        if (this.boxQueue.length > 1) {
+            if(this.boxQueue[1].sprite.x <= -this.maxWidth) {
+                let temp = this.boxQueue.shift();
+                if (!temp.saved) {
+                    this.loader.Save("O" + String(temp.blockNo), temp);
+                    temp.saved = true;
+                }
+                temp.sprite.destroy();
+                temp = null;
             }
-            temp.sprite.destroy();
-            temp = null;
-        }       
+        }    
     }
 }
