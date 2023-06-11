@@ -48,7 +48,7 @@ class Title extends Phaser.Scene {
         });
         
         this.input.keyboard.on('keydown-S', () => {
-            this.scene.start('crash');
+            this.scene.start('crash', {cart: [1920 / 2, 600, 0, 80], capture: null});
         });
     }
     
