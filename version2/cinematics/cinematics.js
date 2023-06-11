@@ -4,7 +4,6 @@ class Title extends Phaser.Scene {
     }
 
     preload() {
-        console.log('Cinematic loaded');
         this.cameras.main.setZoom(.001);
     }
 
@@ -20,7 +19,7 @@ class Title extends Phaser.Scene {
             .setAlpha(0)
             .setInteractive()
             .on('pointerdown', () => {
-                play.setTint("#999999");
+                play.setTint("#888888");
             })
             .on('pointerup', () => {
                 play.clearTint();
@@ -47,7 +46,136 @@ class Title extends Phaser.Scene {
                 })
             }
         });
+        
+        this.input.keyboard.on('keydown-S', () => {
+            this.scene.start('crash', {cart: [1920 / 2, 600, 0, 80], capture: null});
+        });
     }
+    
+}
+
+class CrashCinematic extends Phaser.Scene {
+    constructor(){
+        super("crash");
+    }
+    init(data) {
+        [this.x, this.y, this.h, this.w] = data.cart;
+        this.capture = data.capture;
+    }
+    preload() {
+        this.load.path = "assets/";
+        this.load.image('gp', "gameplay.png");
+        this.load.image('beg', 'beginning.jpeg');
+        this.load.image("minecart", "minecart.png");
+        this.load.image("wheel", "wheel.png");
+        // this.cameras.main.setZoom(1);
+    }
+
+    create() {
+        if (this.capture == null) {
+            this.placeholderGP = this.add.image(0, 0, 'gp').setOrigin(0, 0);
+            game.renderer.snapshot(image => {
+                this.textures.addImage("cap", image);
+                this.f();
+            }, "image/jpeg")
+        } else {
+            this.textures.addImage("cap", this.capture)
+            this.f();
+        }
+        this.input.keyboard.on('keydown-S', () => {
+            this.scene.start('title');
+        });
+
+    }
+
+    f() {
+        this.graphics = this.add.tileSprite(1920, 0, 1920 * 8, 1080, "cap").setOrigin(1, 0);
+        this.beg = this.add.image(-1920 * 8, 0, "beg").setOrigin(0, 0);
+        this.cart = this.add.sprite(this.x, this.y, "minecart").setOrigin(0.5, 1);
+        this.frontWheel = this.add.sprite(this.x + this.w, this.y + this.h, "wheel");
+        this.backWheel = this.add.sprite(this.x - this.w, this.y + this.h, "wheel");
+
+        const timeline = this.add.timeline([
+            {
+                at: 100,
+                tween: {
+                    targets: this.cart,
+                    y: `-=${500}`,
+                    x: `-=${100}`,
+                    angle: 200,
+                    ease: 'Sine',
+                    duration: 2000,
+                }
+            },
+            {
+                at: 100,
+                tween: {
+                    targets: this.frontWheel,
+                    y: `-=${200}`,
+                    x: `+=${200}`,
+                    angle: 400,
+                    ease: 'Sine',
+                    duration: 2000,
+                }
+            },
+            {
+                at: 100,
+                tween: {
+                    targets: this.backWheel,
+                    y: `-=${173}`,
+                    x: `-=${230}`,
+                    angle: 400,
+                    ease: 'Sine',
+                    duration: 2000,
+                }
+            },
+            {
+                at: 2500,
+                tween: {
+                    targets: [this.graphics, this.beg],
+                    x: `+=${1920 * 8}`,
+                    duration: 2000,
+                    ease: 'Sine.inOut'
+                },
+            },
+            {
+                at: 2500,
+                tween: {
+                    targets: this.cart,
+                    x: 1920/2,
+                    y: 1080/2,
+                    angle: 0,
+                    ease: 'Sine.Out',
+                    duration: 2000,
+                },
+            },
+            {
+                at: 2500,
+                tween: {
+                    targets: this.frontWheel,
+                    x: 1920/2 + this.w,
+                    y: 1080/2 + this.h,
+                    angle: 0,
+                    ease: 'Sine.Out',
+                    duration: 2000,
+                },
+            },
+            {
+                at: 2500,
+                tween: {
+                    targets: this.backWheel,
+                    x: 1920/2 - this.w,
+                    y: 1080/2 + this.h,
+                    angle: 0,
+                    ease: 'Sine.Out',
+                    duration: 2000,
+                },
+            },
+            
+        ]);
+        timeline.play();
+    }
+
 }
 
 let config = {
@@ -59,7 +187,7 @@ let config = {
         height: 1080
     },
     backgroundColor: 0x000000,
-    scene: [Title]
+    scene: [Title, CrashCinematic]
 }
 
 let game = new Phaser.Game(config);
