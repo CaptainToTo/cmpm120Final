@@ -57,6 +57,21 @@ class RunnerLevel extends Phaser.Scene {
         // player
         this.load.image("minecart", "minecart.png");
         this.load.image("wheel", "wheel.png");
+
+        // UI
+        this.load.image("board", "board.png");
+
+        // reset containers
+        this.progress = this.width;
+        this.speed = this.slowest; // speed platforms will move at (and objects)
+
+        this.boxQueue = [];
+        this.placed = [];
+
+        this.pList = new LoadList(this, "P");
+
+        this.loader = new Loader(this); // obstacles loader list
+        this.blockNo = 0; //index of the next block to be loader
     }
 
     addBox(x, y, width=0, height=0) {
@@ -102,17 +117,7 @@ class RunnerLevel extends Phaser.Scene {
         this.player = new Player(this, this.start, this.base/2);
 
         // pause button TODO: encapsulate in class
-        this.paused = false; // tru if paused
-        let pauseButton = this.add.text(100, 100, "⏸️", { fontSize: 100 })
-            .setInteractive({ useHandCursor: true })
-            .on('pointerdown', () => {
-                if (this.paused) {
-                    this.scene.resume();
-                } else {
-                    this.scene.pause();
-                    localStorage.clear();
-                }
-            });
+        this.pause = new PauseButton(this);
     }
 
     // remove object from placed list
@@ -127,7 +132,8 @@ class RunnerLevel extends Phaser.Scene {
         this.player.Structure(); // keep player together, and moving
         if (this.player.isStuck(this.boxQueue)) { // check if player has hit a wall
             console.log("gameOver");
-            this.scene.pause(); // TODO: replace with actual game over
+            this.scene.pause();
+            this.scene.launch("GameOver");
         }
 
         if (this.speed < this.maxSpeed) {
