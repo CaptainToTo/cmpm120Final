@@ -17,6 +17,7 @@ class Maker {
             Bedrock: BedrockMaker,
             JumpPad: JumpPadMaker,
             Ramp: RampMaker,
+            Block: BlockMaker,
             LoadList: LoadListMaker
         }
     }

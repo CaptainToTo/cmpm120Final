@@ -23,8 +23,9 @@ class Belt {
         this.probs = [
             {prob: 0.1, type: Bomb},
             {prob: 0.2, type: JumpPad},
-            {prob: 0.3, type: Ramp},
-            {prob: 0.4, type: WaterBucket},
+            {prob: 0.2, type: Ramp},
+            {prob: 0.3, type: WaterBucket},
+            {prob: 0.2, type: Block}
         ];
     }
 

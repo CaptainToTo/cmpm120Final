@@ -130,7 +130,7 @@ class RunnerLevel extends Phaser.Scene {
     // delta contains the time since the last frame update
     update(time, delta) {
         this.player.Structure(); // keep player together, and moving
-        if (this.player.isStuck(this.boxQueue)) { // check if player has hit a wall
+        if (this.player.isStuck(this.boxQueue, this.placed)) { // check if player has hit a wall
             console.log("gameOver");
             this.scene.pause();
             this.scene.launch("GameOver");

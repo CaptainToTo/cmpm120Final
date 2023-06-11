@@ -86,7 +86,7 @@ class Player {
     }
 
     // check if minecart has hit a wall
-    isStuck(boxQueue) {
+    isStuck(boxQueue, placed) {
         for (let i = 0; i < boxQueue.length; i++) {
             const body = boxQueue[i].sprite.body;
 
@@ -94,6 +94,15 @@ class Player {
                 return true;
             }
         }
+        for (let i = 0; i < placed.length; i++) {
+            if (placed[i].objectType != "Block") continue;
+            const body = placed[i].sprite.body;
+
+            if (this.scene.matter.containsPoint(body, this.frontWheel.x, this.frontWheel.y)) {
+                return true;
+            }
+        }
+        
         return false;
     }
 }

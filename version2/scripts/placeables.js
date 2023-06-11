@@ -262,4 +262,42 @@ function RampMaker(scene, jsonObj) {
 }
 
 
-// TODO: add in placeable obstacles 
+// Block
+class Block extends Placeable {
+    constructor(scene, x, y, belt, stretch) {
+        super(scene, x, y, "bedrock", belt, stretch);
+        this.objectType = "Block";
+        this.origY = y; // used to check if placeable has moved, not used?
+    }
+
+    Place() {
+        super.Place();
+        this.sprite.body.isStatic = true;
+        if (!this.saved) {
+            this.id = placeablesIDs;
+            placeablesIDs += 1;
+            // save object
+            this.scene.pList.Insert(this);
+        }
+
+        this.scene.tweens.add({
+            targets: this.sprite,
+            scale: this.stretch,
+            duration: 200
+        });
+
+        this.scene.time.delayedCall(200, this.setScale(this.stretch));
+    }
+}
+
+// specific maker for ramp object
+function BlockMaker(scene, jsonObj) {
+    let obj = new Block(scene, scene.objSpawn, jsonObj.y, scene.belt);
+    obj.id = jsonObj.id;
+    obj.sprite.rotation = jsonObj.rotation;
+    obj.saved = true;
+    obj.Place();
+    obj.saved = false;
+
+    return obj;
+}
