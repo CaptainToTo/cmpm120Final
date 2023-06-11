@@ -8,7 +8,6 @@ class Title extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start("cinematic", {cart: [1920 / 2, 600, 0, 80], capture: null});
         // create a new text object
         let bg = this.add.rectangle (1920/2, 1080/2, 1920, 1080, "0x005b37")
         let titleText = this.add.text(1920/2, 400, 'ChronoCart', {
@@ -187,7 +186,7 @@ let config = {
         width: 1920,
         height: 1080
     },
-    backgroundColor: 0x00FF99,
+    backgroundColor: 0x000000,
     scene: [Title, CrashCinematic]
 }
 
