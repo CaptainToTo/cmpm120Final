@@ -9,3 +9,6 @@
         * Title grows and shinks
     * Responsive
         * Button darkened on press
+
+- [x] **Code Choreography**
+    * Crash Cinematic based on timeline
