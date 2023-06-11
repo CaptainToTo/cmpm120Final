@@ -61,7 +61,7 @@ class Explodable extends Obstacle {
     constructor(scene, x, y, width, height, demolishedHeight) {
         super(scene, x, y, width, height, "explodable", demolishedHeight);
         this.objectType = "Explodable";
-        this.weatherStep = scene.maxHeight * 0.1;
+        this.weatherStep = scene.maxHeight * 0.2;
         // save object
         this.scene.loader.Save("O" + String(this.blockNo), this);
     }
@@ -100,7 +100,7 @@ class Weatherable extends Obstacle {
     constructor(scene, x, y, width, height, demolishedHeight) {
         super(scene, x, y, width, height, "weatherable", demolishedHeight);
         this.objectType = "Weatherable";
-        this.weatherStep = scene.maxHeight * 0.3;
+        this.weatherStep = scene.maxHeight * 0.4;
         // save object
         this.scene.loader.Save("O" + String(this.blockNo), this);
     }

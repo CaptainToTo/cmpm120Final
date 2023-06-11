@@ -21,7 +21,7 @@ class Paused extends Phaser.Scene {
     create() {
         this.paused = this.add.text(game.config.width/2, game.config.height/2 - 200, "PAUSED",
             {
-                font:"100px Arial",
+                font:"120px Arial",
                 align: "center",
                 color: "#0FD90E",
             }).setOrigin(0.5, 0.5);
@@ -32,18 +32,28 @@ class Paused extends Phaser.Scene {
                 this.scene.resume("RunnerLevel");
             });
         
-        this.clear = new Button(this, game.config.width/2, game.config.height/2 + 300,
+        this.clear = new Button(this, game.config.width/2, game.config.height/2 + 200,
             "RESET", () => {
                 this.delete();
                 localStorage.clear();
                 this.scene.start("Loading");
             });
+        
+        this.full = new Button(this, game.config.width/2, game.config.height/2 + 400,
+        "FULL SCREEN", () => {
+            if (this.scale.isFullscreen) {
+                this.scale.stopFullscreen();
+            } else {
+                this.scale.startFullscreen();
+            }
+        });
     }
 
     delete() {
         this.paused.destroy();
         if (this.cont != undefined) this.cont.destroy();
         if (this.clear != undefined) this.clear.destroy();
+        if (this.full != undefined) this.full.destroy();
     }
 }
 
@@ -57,7 +67,7 @@ class GameOver extends Phaser.Scene {
     create() {
         let paused = this.add.text(game.config.width/2, game.config.height/2 - 150, "GAME OVER",
             {
-                font:"100px Arial",
+                font:"120px Arial",
                 align: "center",
                 color: "#EF2F09",
             }).setOrigin(0.5, 0.5);

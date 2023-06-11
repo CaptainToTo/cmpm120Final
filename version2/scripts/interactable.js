@@ -2,7 +2,7 @@
 
 class Interactable {
     constructor(scene, x, y, texture, action, frame={}) {
-        this.image = scene.add.image(x, y, texture, frame).setScale(1.5 ,1);
+        this.image = scene.add.image(x, y, texture, frame).setScale(1.5 ,0.7);
         this.scene = scene;
         this.action = action;
         this.originalScale = 1.5;
@@ -53,7 +53,7 @@ class Button extends Interactable {
         super(scene, 0, 0, "board", action);
         this.text = scene.add.text(0, 0, text,
             {
-                font:"90px Arial",
+                font:"70px Arial",
                 align: "center",
                 color: "#2AB9FF",
             }).setOrigin(0.5, 0.5);
