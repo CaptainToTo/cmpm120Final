@@ -1,19 +1,9 @@
-# cmpm120Final
-
-## Deployed Link: https://captaintoto.github.io/cmpm120Final/
-
-## Roles:
-
-### Production Lead: Joost "Will" Vonk
-
-### Programming Lead: Anthony Umemoto
-
-### Testing Lead: Aaron Bruno
-
-## Theme: Nearby in Space, Distant in Time
-
-
-## Sources:
-
-### seedrandom.js by davidbau: https://github.com/davidbau/seedrandom
-Used for random number generator with seeding to create the same level layout for repeat playthroughs.
+# ChronoCart Scene Flow Prototype
+- [x]  2+ Audio Types
+    * Dynamically-generated sound
+    * Voice clip triggered in response to game event
+- [x]  Visual
+- [x]  Motion
+- [x]  Progression
+- [x]  Prefabs
+    

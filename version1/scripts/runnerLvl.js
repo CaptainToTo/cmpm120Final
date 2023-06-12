@@ -1,3 +1,4 @@
+const synth = new Tone.Synth().toDestination();
 class RunnerLevel extends Phaser.Scene {
     constructor(name="RunnerLevel", /*seed="12345",*/ speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
         super(name);
@@ -57,6 +58,7 @@ class RunnerLevel extends Phaser.Scene {
         // player
         this.load.image("minecart", "minecart.png");
         this.load.image("wheel", "wheel.png");
+        this.load.audio("letsroll", "letsroll.mp3");
     }
 
     addBox(x, y, width=0, height=0) {
@@ -89,6 +91,7 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     create() {
+        this.sound.add("letsroll").play();
         this.floorLayer = this.matter.world.nextCategory();
 
         this.boxQueue.push(
@@ -121,12 +124,14 @@ class RunnerLevel extends Phaser.Scene {
         this.placed[i] = null;
         this.placed.splice(i, 1);
     }
-
     // delta contains the time since the last frame update
     update(time, delta) {
         this.player.Structure(); // keep player together, and moving
         if (this.player.isStuck(this.boxQueue)) { // check if player has hit a wall
             console.log("gameOver");
+
+            //play a middle 'C' for the duration of an 8th note
+            console.log(synth.triggerAttackRelease("C4", "8n"));
             this.scene.pause(); // TODO: replace with actual game over
         }
 
