@@ -42,7 +42,6 @@ class Paused extends Phaser.Scene {
         this.home = new Button(this, game.config.width/2 + 400, game.config.height/2,
             "HOME", () => {
                 this.delete();
-                localStorage.clear();
                 this.scene.start("Title");
             });
         

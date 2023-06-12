@@ -121,6 +121,22 @@ class RunnerLevel extends Phaser.Scene {
 
         // pause button
         this.pause = new PauseButton(this);
+
+        this.scoreText = this.add.text(0, 0, "Score: ",
+            {
+                font:"50px Arial",
+                align: "center",
+                color: "#FFFFFF",
+            }).setOrigin(0.5, 0.5);
+        this.highText = this.add.text(0, 60, "Highscore: ",
+            {
+                font:"50px Arial",
+                align: "center",
+                color: "#FFFFFF",
+            }).setOrigin(0.5, 0.5);
+        
+        this.scoreBoard = this.add.container(500, 100);
+        this.scoreBoard.add([this.scoreText, this.highText]);
     }
 
     // remove object from placed list
@@ -132,6 +148,11 @@ class RunnerLevel extends Phaser.Scene {
 
     // delta contains the time since the last frame update
     update(time, delta) {
+        // update score:
+        this.scoreText.setText(`Score: ${parseInt((this.progress - this.width) / 100)}`);
+        let highscore = this.highscore == 0 ? 0 : parseInt((this.highscore - this.width) / 100);
+        this.highText.setText(`Highscore: ${highscore}`);
+
         this.player.Structure(); // keep player together, and moving
         if (this.player.isStuck(this.boxQueue, this.placed)) { // check if player has hit a wall
             // update highscore
@@ -142,8 +163,7 @@ class RunnerLevel extends Phaser.Scene {
 
             console.log("gameOver");
             this.scene.pause();
-            this.scene.launch("GameOver", {cart: this.player})
-            
+            this.scene.launch("GameOver", {cart: this.player});
         }
 
         if (this.speed < this.maxSpeed) {

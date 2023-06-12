@@ -124,7 +124,6 @@ class Player {
             h: this.h,
             w: this.w
         }
-        console.log("obj: ",obj);
 
         this.minecart.destroy();
         this.backWheel.destroy();
