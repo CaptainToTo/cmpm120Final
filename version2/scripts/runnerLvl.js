@@ -116,7 +116,7 @@ class RunnerLevel extends Phaser.Scene {
         // create player
         this.player = new Player(this, this.start, this.base/2);
 
-        // pause button TODO: encapsulate in class
+        // pause button
         this.pause = new PauseButton(this);
     }
 
@@ -132,8 +132,14 @@ class RunnerLevel extends Phaser.Scene {
         this.player.Structure(); // keep player together, and moving
         if (this.player.isStuck(this.boxQueue, this.placed)) { // check if player has hit a wall
             console.log("gameOver");
-            this.scene.pause();
-            this.scene.launch("GameOver");
+            // this.scene.pause();
+            // this.scene.launch("GameOver");
+            const coords = this.player.destroy();
+            game.renderer.snapshot(image => {
+                // this.textures.addImage("cap", image);
+                this.scene.start("GameOver", {capture: image, coords: coords});
+            }, "image/jpeg")
+            
         }
 
         if (this.speed < this.maxSpeed) {

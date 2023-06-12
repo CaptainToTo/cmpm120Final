@@ -102,8 +102,31 @@ class Player {
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    destroy() {
+        let obj = {
+            cart: {
+                x: this.minecart.x,
+                y: this.minecart.y
+            },
+            backWheel: {
+                x: this.backWheel.x,
+                y: this.backWheel.y
+            },
+            frontWheel: {
+                x: this.frontWheel.x,
+                y: this.frontWheel.y
+            },
+            h: this.h,
+            w: this.w
+        }
+        this.minecart.destroy();
+        this.backWheel.destroy();
+        this.frontWheel.destroy();
+        return obj;
     }
 }
 
