@@ -1,11 +1,11 @@
 // basic interactable class and a button that can be used for UI. Sprite is hard coded
 
 class Interactable {
-    constructor(scene, x, y, texture, action, frame={}) {
-        this.image = scene.add.image(x, y, texture, frame).setScale(1.5 ,0.7);
+    constructor(scene, x, y, texture, action, scale=1.7, frame={}) {
+        this.image = scene.add.image(x, y, texture, frame).setScale(scale ,0.7);
         this.scene = scene;
         this.action = action;
-        this.originalScale = 1.5;
+        this.originalScale = scale;
 
         this.image.setInteractive()
             .on('pointerover', () => {

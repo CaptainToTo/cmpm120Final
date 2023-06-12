@@ -26,20 +26,27 @@ class Paused extends Phaser.Scene {
                 color: "#0FD90E",
             }).setOrigin(0.5, 0.5);
 
-        this.cont = new Button(this, game.config.width/2, game.config.height/2,
+        this.cont = new Button(this, game.config.width/2 - 400, game.config.height/2,
             "CONTINUE", () => {
                 this.delete();
                 this.scene.resume("RunnerLevel");
             });
         
-        this.clear = new Button(this, game.config.width/2, game.config.height/2 + 200,
+        this.clear = new Button(this, game.config.width/2 - 400, game.config.height/2 + 200,
             "RESET", () => {
                 this.delete();
                 localStorage.clear();
                 this.scene.start("Loading");
             });
         
-        this.full = new Button(this, game.config.width/2, game.config.height/2 + 400,
+        this.home = new Button(this, game.config.width/2 + 400, game.config.height/2,
+            "HOME", () => {
+                this.delete();
+                localStorage.clear();
+                this.scene.start("Title");
+            });
+        
+        this.full = new Button(this, game.config.width/2 + 400, game.config.height/2 + 200,
         "FULL SCREEN", () => {
             if (this.scale.isFullscreen) {
                 this.scale.stopFullscreen();
@@ -53,34 +60,12 @@ class Paused extends Phaser.Scene {
         this.paused.destroy();
         if (this.cont != undefined) this.cont.destroy();
         if (this.clear != undefined) this.clear.destroy();
+        if (this.home != undefined) this.home.destroy();
         if (this.full != undefined) this.full.destroy();
     }
 }
 
-class GameOver extends Phaser.Scene {
-    constructor() {
-        super("GameOver");
-    }
-
-    preload() {}
-
-    create() {
-        let paused = this.add.text(game.config.width/2, game.config.height/2 - 150, "GAME OVER",
-            {
-                font:"120px Arial",
-                align: "center",
-                color: "#EF2F09",
-            }).setOrigin(0.5, 0.5);
-
-        let cont = new Button(this, game.config.width/2, game.config.height/2 + 100,
-            "RESTART", () => {
-                paused.destroy();
-                cont.destroy();
-                this.scene.start("Loading");
-            });
-    }
-}
-
+// intermediate loading scene in between gameover/pause and restart runner scene
 class Loading extends Phaser.Scene {
     constructor() {
         super("Loading");

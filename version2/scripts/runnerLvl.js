@@ -72,6 +72,9 @@ class RunnerLevel extends Phaser.Scene {
 
         this.loader = new Loader(this); // obstacles loader list
         this.blockNo = 0; //index of the next block to be loader
+
+        let temp = localStorage.getItem(String("score"));
+        this.highscore = temp == null ? 0 : temp;
     }
 
     addBox(x, y, width=0, height=0) {
@@ -116,7 +119,7 @@ class RunnerLevel extends Phaser.Scene {
         // create player
         this.player = new Player(this, this.start, this.base/2);
 
-        // pause button TODO: encapsulate in class
+        // pause button
         this.pause = new PauseButton(this);
     }
 
@@ -131,9 +134,16 @@ class RunnerLevel extends Phaser.Scene {
     update(time, delta) {
         this.player.Structure(); // keep player together, and moving
         if (this.player.isStuck(this.boxQueue, this.placed)) { // check if player has hit a wall
+            // update highscore
+            if (this.progress > this.highscore) {
+                localStorage.setItem( "score", String(parseInt(this.progress)) );
+                console.log("new highscore: ", this.progress);
+            }
+
             console.log("gameOver");
             this.scene.pause();
-            this.scene.launch("GameOver");
+            this.scene.launch("GameOver", {cart: this.player})
+            
         }
 
         if (this.speed < this.maxSpeed) {
