@@ -110,7 +110,8 @@ class Player {
         let obj = {
             cart: {
                 x: this.minecart.x,
-                y: this.minecart.y
+                y: this.minecart.y,
+                angle: this.minecart.angle,
             },
             backWheel: {
                 x: this.backWheel.x,
@@ -123,6 +124,8 @@ class Player {
             h: this.h,
             w: this.w
         }
+        console.log("obj: ",obj);
+
         this.minecart.destroy();
         this.backWheel.destroy();
         this.frontWheel.destroy();

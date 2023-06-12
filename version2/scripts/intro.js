@@ -10,33 +10,33 @@ class Title extends Phaser.Scene {
     create() {
         // create a new text object
         let bg = this.add.rectangle (1920/2, 1080/2, 1920, 1080, "0x005b37")
-        let titleText = this.add.text(1920/2, 400, 'ChronoCart', {
+        let titleText = this.add.text(1920/2, 300, 'ChronoCart', {
             fontSize: 120,
             color: '#dd571c'
         }).setOrigin(.5, .5);
 
-        let play = this.add.text(700, 1900, '<Play>', {fontSize: 120})
-            .setAlpha(0)
-            .setInteractive()
-            .on('pointerdown', () => {
-                play.setTint("#888888");
-            })
-            .on('pointerup', () => {
-                play.clearTint();
-                this.scene.start("RunnerLevel");
-            })
+        let play = new Button(this, game.config.width/2, game.config.height/2,
+        "PLAY", () => {
+            this.scene.start("RunnerLevel");
+        }, 2);
         
-        let reset = this.add.text(game.canvas.width/2, 2300, '<Reset>', {fontSize: 120})
-            .setAlpha(0)
-            .setInteractive()
-            .on('pointerdown', () => {
-                reset.setTint("#888888");
-            })
-            .on('pointerup', () => {
-                reset.clearTint();
+        let clear = new Button(this, game.config.width/2, game.config.height/2 + 200,
+            "RESET LEVEL", () => {
                 localStorage.clear();
-            })
-            .setOrigin(0.5, 0.5);
+                clear.text.setText("COMPLETE");
+                this.time.delayedCall(2000, () => {
+                    clear.text.setText("RESET LEVEL");
+                })
+            }, 2);
+        
+        let full = new Button(this, game.config.width/2, game.config.height/2 + 400,
+        "FULL SCREEN", () => {
+            if (this.scale.isFullscreen) {
+                this.scale.stopFullscreen();
+            } else {
+                this.scale.startFullscreen();
+            }
+        }, 2);
 
         this.cameras.main.shake(1500, new Phaser.Math.Vector2(0.005, 0.02), false, (camera, progress) => {
             if (progress == 1) this.cameras.main.flash();
@@ -51,17 +51,10 @@ class Title extends Phaser.Scene {
                     repeat: -1,
                     ease: 'Sine.inOut'
                 })
-                play.setAlpha(1);
-                this.tweens.add({
-                    targets: play,
-                    y: 550,
-                    duration: 500
-                })
+                play.image.setAlpha(1);
+                clear.image.setAlpha(1);
+                full.image.setAlpha(1);
             }
-        });
-        
-        this.input.keyboard.on('keydown-S', () => {
-            this.scene.start('crash', {cart: [1920 / 2, 600, 0, 80], capture: null});
         });
     }
 }
