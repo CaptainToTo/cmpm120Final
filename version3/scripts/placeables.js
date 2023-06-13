@@ -27,6 +27,8 @@ class Placeable {
         this.saved = false;     // if object was placed in a previous run, previous duplicate saves
 
         this.noisy = new Tone.NoiseSynth().toDestination();
+        this.osc = new Tone.Oscillator().toDestination();
+        this.plucky = new Tone.PluckSynth().toDestination();
 
         // synth.volume.value = -8;
 
@@ -54,6 +56,11 @@ class Placeable {
             .on("pointerdown", () => { // pickup and follow
                 if (!self.placed) {
                     self.grabbed = true;
+                    scene.tweens.add({
+                        targets: self.sprite,
+                        scale: self.originalScale + (self.originalScale * 0.1),
+                        duration: 150
+                    })
                     this.noisy.noise.type = "brown"
                     this.noisy.triggerAttackRelease("8n")
                 }
@@ -126,8 +133,12 @@ class Bomb extends Placeable {
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: exploding animation
-                this.noisy.noise.type = "white"
-                this.noisy.triggerAttackRelease
+                // this.noisy.noise.type = "white"
+                // this.noisy.envelope.sustain = .1
+                // this.noisy.triggerAttackRelease("8n");
+                this.osc.frequency.value = "C3";
+                this.osc.frequency.rampTo("C2", 1);
+                this.osc.start().stop("+1");
                 this.scene.boxQueue[i].Demolish();
                 break;
             }
@@ -150,6 +161,8 @@ class WaterBucket extends Placeable {
     Place() {
         super.Place();
         this.sprite.body.isStatic = true;
+        this.plucky.volume.value = 10;
+        this.plucky.triggerAttack("C5");
         
         // check for collisions with blocks
         for (let i = 0; i < this.scene.boxQueue.length; i++) {
@@ -158,6 +171,7 @@ class WaterBucket extends Placeable {
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: weathering animation
+
                 this.scene.boxQueue[i].Weather();
                 break;
             }

@@ -39,7 +39,11 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     init(data) {
-        this.muted = data.muted; // get if scene should be muted
+        if (data.muted != undefined) {
+            this.muted = data.muted; // get if scene should be muted
+        } else {
+            this.muted = localStorage.getItem("muted") == "true" ? true : false;
+        }
     }
 
     preload() {

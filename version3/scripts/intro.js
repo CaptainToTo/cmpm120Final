@@ -23,7 +23,11 @@ class Title extends Phaser.Scene {
     }
 
     init(data) {
-        if (data != undefined) this.muted = data.muted;
+        if (data.muted != undefined) {
+            this.muted = data.muted; // get if scene should be muted
+        } else {
+            this.muted = localStorage.getItem("muted") == "true" ? true : false;
+        }
     }
 
     preload() {
