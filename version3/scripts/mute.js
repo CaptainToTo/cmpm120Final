@@ -34,6 +34,7 @@ class MuteButton {
                     duration: 100
                 });
                 this.action();
+                localStorage.setItem("muted", String(this.scene.muted));
             });
     }
 
