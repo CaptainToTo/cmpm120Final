@@ -161,9 +161,6 @@ class WaterBucket extends Placeable {
     Place() {
         super.Place();
         this.sprite.body.isStatic = true;
-        this.plucky.volume.value = 10;
-        this.plucky.triggerAttack("C5");
-        
         // check for collisions with blocks
         for (let i = 0; i < this.scene.boxQueue.length; i++) {
             const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
@@ -171,7 +168,8 @@ class WaterBucket extends Placeable {
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: weathering animation
-
+                this.plucky.volume.value = 10;
+                this.plucky.triggerAttack("C5");
                 this.scene.boxQueue[i].Weather();
                 break;
             }
@@ -223,6 +221,7 @@ class JumpPad extends Placeable {
             if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
                 (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
                     self.scene.player.frontWheel.setVelocity(50, -10);
+                    
             }
         })
 
