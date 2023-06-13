@@ -88,6 +88,9 @@ class Title extends Phaser.Scene {
                 full.image.setAlpha(1);
             }
         });
+
+        Tone.Transport.stop();
+        Tone.Transport.cancel();
         const synth1 = new Tone.Synth().toDestination();
         const synth2 = new Tone.Synth().toDestination();
         const synth3 = new Tone.Synth().toDestination();

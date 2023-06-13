@@ -114,7 +114,6 @@ class RunnerLevel extends Phaser.Scene {
 
     create() {
         this.home = false;
-        Tone.Transport.cancel();
 
         this.back = this.add.image(this.width/2, this.base/2, "back").setOrigin(0.5,0.5).setScale(3);
         // tutorial
@@ -158,6 +157,31 @@ class RunnerLevel extends Phaser.Scene {
         
         this.scoreBoard = this.add.container(200, 300);
         this.scoreBoard.add([this.scoreText, this.highText]);
+
+        Tone.Transport.stop();
+        Tone.Transport.cancel();
+        const synth1 = new Tone.Synth().toDestination();
+        const synth2 = new Tone.Synth().toDestination();
+        const synth3 = new Tone.Synth().toDestination();
+        const synth4 = new Tone.Synth().toDestination();
+        synth2.volume.value = -16; 
+        synth3.volume.value = -16;
+        synth4.volume.value = -16;
+        Tone.Transport.bpm.value = 160;
+        const seq1 = new Tone.Sequence((time, note) => {
+            synth1.triggerAttackRelease(note, 0.1, time);
+        }, ["F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C2","C2","C2","C2","C2","C2","C2","C2"]).start(0);
+        const seq2 = new Tone.Sequence((time, note) => {
+            synth2.triggerAttackRelease(note, 0.1, time);
+        }, ["G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","B3","B3","B3","B3","B3","B3","B3","B3","G3","G3","G3","G3","G3","G3","G3","G3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C4","C4","C4","C4","C4","C4","C4","C4",]).start("8m");
+        const seq3 = new Tone.Sequence((time, note) => {
+            synth3.triggerAttackRelease(note, 0.1, time);
+        }, ["C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","B4","B4","B4","B4","B4","B4","B4","B4","E4","E4","E4","E4","E4","E4","E4","E4","C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","C#5","C#5","C#5","C#5","C#5","C#5","C#5","C#5","E5","E5","E5","E5","E5","E5","E5","E5",]).start("16m");
+        const seq4 = new Tone.Sequence((time, note) => {
+            synth4.triggerAttackRelease(note, 0.1, time);
+        }, ["F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6",]).start("24m");
+        Tone.Transport.start();
+
     }
 
     // remove object from placed list
@@ -197,6 +221,8 @@ class RunnerLevel extends Phaser.Scene {
             }
 
             console.log("gameOver");
+            Tone.Transport.stop();
+            Tone.Transport.cancel();
             this.scene.pause();
             this.scene.launch("GameOver", {cart: this.player});
         }
