@@ -26,6 +26,10 @@ class Placeable {
         this.grabbed = false;   // player is currently placing object
         this.saved = false;     // if object was placed in a previous run, previous duplicate saves
 
+        this.noisy = new Tone.NoiseSynth().toDestination();
+
+        // synth.volume.value = -8;
+
         // on interaction animations
         let self = this;
         this.sprite.setInteractive()
@@ -50,6 +54,8 @@ class Placeable {
             .on("pointerdown", () => { // pickup and follow
                 if (!self.placed) {
                     self.grabbed = true;
+                    this.noisy.noise.type = "brown"
+                    this.noisy.triggerAttackRelease("8n")
                 }
             })
             .on("pointerup", () => { // drop object
@@ -120,6 +126,8 @@ class Bomb extends Placeable {
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: exploding animation
+                this.noisy.noise.type = "white"
+                this.noisy.triggerAttackRelease
                 this.scene.boxQueue[i].Demolish();
                 break;
             }
