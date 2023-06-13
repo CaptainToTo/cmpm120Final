@@ -85,7 +85,6 @@ class GameOver extends Phaser.Scene {
     }
 
     f() {
-        console.log(this.cart);
         this.graphics = this.add.tileSprite(this.width, 0, this.width * 8, this.base, "cap").setOrigin(1, 0);
         this.beg = this.add.image(-this.width * 8, 0, "beg").setOrigin(0, 0);
         this.children.sendToBack(this.graphics);
