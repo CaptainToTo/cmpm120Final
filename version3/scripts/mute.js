@@ -27,6 +27,8 @@ class MuteButton {
                     scale: this.originalScale,
                     duration: 100
                 });
+            })
+            .on('pointerup', () => {
                 this.scene.tweens.add({
                     targets: this.button,
                     scale: this.originalScale + (this.originalScale * 0.1),

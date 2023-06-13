@@ -50,6 +50,11 @@ class Placeable {
             .on("pointerdown", () => { // pickup and follow
                 if (!self.placed) {
                     self.grabbed = true;
+                    scene.tweens.add({
+                        targets: self.sprite,
+                        scale: self.originalScale + (self.originalScale * 0.1),
+                        duration: 150
+                    })
                 }
             })
             .on("pointerup", () => { // drop object

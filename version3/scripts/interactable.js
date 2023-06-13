@@ -28,6 +28,8 @@ class Interactable {
                     scaleX: this.originalScale,
                     duration: 100
                 });
+            })
+            .on('pointerup', () => {
                 this.scene.tweens.add({
                     targets: this.image,
                     scaleX: this.originalScale + (this.originalScale * 0.1),
