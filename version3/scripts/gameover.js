@@ -17,7 +17,8 @@ class GameOver extends Phaser.Scene {
         this.base = game.config.height;
         this.width = game.config.width;
         this.start = this.width / 5
-        this.osc = new Tone.Oscillator().toDestination();
+        this.gainNode = new Tone.Gain(0).toDestination();
+        this.osc = new Tone.Oscillator("C4").connect(this.gainNode).start();
 
         this.coords = this.cart.destroy();
         this.cart = this.add.sprite(this.coords.cart.x, this.coords.cart.y, "minecart").setOrigin(0.5, 1).setAngle(this.coords.cart.angle);
@@ -29,7 +30,8 @@ class GameOver extends Phaser.Scene {
                 run: () => { 
                     this.osc.frequency.value = "C4";
                     this.osc.frequency.rampTo("C1", 2.5);
-                    this.osc.start().stop("+2.5");
+                    this.gainNode.gain.rampTo(1, 0.1);
+                    this.gainNode.gain.rampTo(0, 2, "+0.5")
                 }
             },
             {
@@ -95,7 +97,8 @@ class GameOver extends Phaser.Scene {
                 run: () => { 
                     this.osc.frequency.value = "C1";
                     this.osc.frequency.rampTo("C4", 2);
-                    this.osc.start().stop("+2");
+                    this.gainNode.gain.rampTo(1, 1.5);
+                    this.gainNode.gain.rampTo(0, 0.1, "+1.9")
                 }
             },
             {

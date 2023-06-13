@@ -28,8 +28,9 @@ class Placeable {
 
         this.noisy = new Tone.NoiseSynth().toDestination();
         this.noisy.volume.value = -8
-        this.osc = new Tone.Oscillator().toDestination();
         this.plucky = new Tone.PluckSynth().toDestination();
+        this.gainNode = new Tone.Gain(0).toDestination();
+        this.osc = new Tone.Oscillator().connect(this.gainNode).start();
 
         // synth.volume.value = -8;
 
@@ -133,10 +134,10 @@ class Bomb extends Placeable {
 
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue
-                this.osc.volume.value = 0;
                 this.osc.frequency.value = "C3";
                 this.osc.frequency.rampTo("C2", 1);
-                this.osc.start().stop("+1");
+                this.gainNode.gain.rampTo(1, 0.1);
+                this.gainNode.gain.rampTo(0, 0.7, "+0.3")
                 this.scene.boxQueue[i].Demolish();
                 break;
             }
@@ -225,7 +226,8 @@ class JumpPad extends Placeable {
                     this.osc.volume.value = -16;
                     this.osc.frequency.value = "C4";
                     this.osc.frequency.rampTo("C5", .5);
-                    this.osc.start().stop("+.5");
+                    this.gainNode.gain.rampTo(1, 0.1);
+                    this.gainNode.gain.rampTo(0, 0.1, "+0.4")
             }
         })
 
