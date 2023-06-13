@@ -17,12 +17,21 @@ class GameOver extends Phaser.Scene {
         this.base = game.config.height;
         this.width = game.config.width;
         this.start = this.width / 5
+        this.osc = new Tone.Oscillator().toDestination();
 
         this.coords = this.cart.destroy();
         this.cart = this.add.sprite(this.coords.cart.x, this.coords.cart.y, "minecart").setOrigin(0.5, 1).setAngle(this.coords.cart.angle);
         this.frontWheel = this.add.sprite(this.coords.frontWheel.x, this.coords.frontWheel.y, "wheel");
         this.backWheel = this.add.sprite(this.coords.backWheel.x, this.coords.backWheel.y, "wheel");
         const timeline1 = this.add.timeline([
+            {
+                at: 100,
+                run: () => { 
+                    this.osc.frequency.value = "C4";
+                    this.osc.frequency.rampTo("C1", 2.5);
+                    this.osc.start().stop("+2.5");
+                }
+            },
             {
                 at: 100,
                 tween: {
@@ -81,6 +90,14 @@ class GameOver extends Phaser.Scene {
         this.children.sendToBack(this.beg);
 
         const timeline2 = this.add.timeline([
+            {
+                at: 100,
+                run: () => { 
+                    this.osc.frequency.value = "C1";
+                    this.osc.frequency.rampTo("C4", 2);
+                    this.osc.start().stop("+2");
+                }
+            },
             {
                 at: 100,
                 tween: {
