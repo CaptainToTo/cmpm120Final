@@ -12,6 +12,13 @@
 
 ## Theme: Nearby in Space, Distant in Time
 
+## Issues:
+
+- After about 30 "game over"s, collision stops working and the player repeatedly falls through the ground. Refreshing the page will fix this bug.
+
+- The jump pad will occasionally not jump the player into the air if the front half of the hitbox isn't touched.
+
+- After some time, the stored level data can become corrupted, resulting in some placed objects not loading correctly.
 
 ## Sources:
 
