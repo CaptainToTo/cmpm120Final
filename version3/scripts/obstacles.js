@@ -148,8 +148,9 @@ class Bedrock extends Obstacle {
 function BedrockMaker(scene, jsonObj) {
     const width = jsonObj.width;
     const height = jsonObj.height;
+    let x = scene.boxQueue.length < 1 ? scene.mid/2 : scene.boxQueue.at(-1).sprite.x + (scene.boxQueue.at(-1).sprite.width/2);
     let obj = new Bedrock(scene, 
-        scene.boxQueue.at(-1).sprite.x + (scene.boxQueue.at(-1).sprite.width/2), scene.base, 
+        x, scene.base, 
         width, height, 
         scene.demolishedHeight);
     obj.saved = true;

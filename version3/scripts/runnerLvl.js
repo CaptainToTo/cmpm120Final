@@ -102,7 +102,7 @@ class RunnerLevel extends Phaser.Scene {
             height = this.minHeight + (this.rand() * (this.maxHeight - this.minHeight)); 
         }
 
-        const pick = this.rand(); // random number from [0, 1)
+        const pick = this.boxQueue.length == 0 ? 0.99 : this.rand(); // random number from [0, 1)
         let total = 0;
         for (let i = 0; i < this.probs.length; i++) {
             total += this.probs[i].prob;

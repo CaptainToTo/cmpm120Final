@@ -19,12 +19,12 @@ class Title extends Phaser.Scene {
         // create a new text object
         let titleText = this.add.image(1920/2, 250, 'title').setOrigin(.5, .5).setScale(2);
 
-        let play = new Button(this, game.config.width/2, game.config.height/2,
+        let play = new Button(this, game.config.width/2 - 400, game.config.height/2,
         "PLAY", () => {
             this.scene.start("RunnerLevel");
         }, 2);
         
-        let clear = new Button(this, game.config.width/2, game.config.height/2 + 200,
+        let clear = new Button(this, game.config.width/2 - 400, game.config.height/2 + 200,
             "RESET LEVEL", () => {
                 localStorage.clear();
                 clear.text.setText("COMPLETE");
@@ -33,7 +33,7 @@ class Title extends Phaser.Scene {
                 })
             }, 2);
         
-        let full = new Button(this, game.config.width/2, game.config.height/2 + 400,
+        let full = new Button(this, game.config.width/2 - 400, game.config.height/2 + 400,
         "FULL SCREEN", () => {
             if (this.scale.isFullscreen) {
                 this.scale.stopFullscreen();
@@ -41,6 +41,34 @@ class Title extends Phaser.Scene {
                 this.scale.startFullscreen();
             }
         }, 2);
+
+        let authors1 = this.add.text(game.config.width * 0.6, game.config.height * 0.45,
+        "CREATED BY:",
+        {
+            font:"70px Arial",
+            color: "#FFFFFF",
+        }).setOrigin(0, 0.5);
+
+        let authors2 = this.add.text(game.config.width * 0.6, game.config.height * 0.6,
+            "Production Lead:\n     Joost (Will) Vonk",
+            {
+                font:"50px Arial",
+                color: "#FFFFFF",
+            }).setOrigin(0, 0.5);
+
+        let authors3 = this.add.text(game.config.width * 0.6, game.config.height * 0.73,
+            "Programming Lead:\n     Anthony Umemoto",
+            {
+                font:"50px Arial",
+                color: "#FFFFFF",
+            }).setOrigin(0, 0.5);
+        
+        let authors4 = this.add.text(game.config.width * 0.6, game.config.height * 0.86,
+            "Art Lead:\n     Aaron Bruno",
+            {
+                font:"50px Arial",
+                color: "#FFFFFF",
+            }).setOrigin(0, 0.5);
 
         this.cameras.main.shake(1500, new Phaser.Math.Vector2(0.005, 0.02), false, (camera, progress) => {
             if (progress == 1) this.cameras.main.flash();
