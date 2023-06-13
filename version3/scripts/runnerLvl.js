@@ -118,6 +118,12 @@ class RunnerLevel extends Phaser.Scene {
         this.home = false;
 
         this.back = this.add.image(this.width/2, this.base/2, "back").setOrigin(0.5,0.5).setScale(3);
+        // tutorial
+        this.tut1 = this.add.image(0, 0, "tut1").setOrigin(0.5, 0.5);
+        this.tut2 = this.add.image(1000, 0, "tut2").setOrigin(0.5, 0.5);
+        this.tut3 = this.add.image(2000, 0, "tut3").setOrigin(0.5, 0.5);
+        this.tutorials = this.add.container(this.width, this.base * 0.5);
+        this.tutorials.add([this.tut1, this.tut2, this.tut3]);
 
         this.floorLayer = this.matter.world.nextCategory();
 
@@ -151,12 +157,7 @@ class RunnerLevel extends Phaser.Scene {
         this.scoreBoard = this.add.container(200, 300);
         this.scoreBoard.add([this.scoreText, this.highText]);
 
-        // tutorial
-        this.tut1 = this.add.image(0, 0, "tut1").setOrigin(0.5, 0.5);
-        this.tut2 = this.add.image(1000, 0, "tut2").setOrigin(0.5, 0.5);
-        this.tut3 = this.add.image(2000, 0, "tut3").setOrigin(0.5, 0.5);
-        this.tutorials = this.add.container(this.width, this.base * 0.5);
-        this.tutorials.add([this.tut1, this.tut2, this.tut3]);
+        
     }
 
     // remove object from placed list
