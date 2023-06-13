@@ -6,7 +6,7 @@ const game = new Phaser.Game({
         height: 1080
     },
     backgroundColor: 0x000000,
-    scene: [Title, RunnerLevel, Paused, GameOver, Loading, BackHome],
+    scene: [Start, Title, RunnerLevel, Paused, GameOver, Loading, BackHome],
     powerPerformance: "high-performance",
     title: "Runner",
     physics: {

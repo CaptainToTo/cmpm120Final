@@ -1,6 +1,29 @@
+class Start extends Phaser.Scene {
+    constructor() {
+        super('Start')
+    }
+    create() {
+        this.add.text(game.canvas.width / 2 - 200, game.canvas.height / 2 - 50, "Click anywhere to begin.",
+            {
+                font:"40px Arial",
+                align: "center",
+                color: "#FFFFFF",
+            });
+        this.input.on('pointerdown', () => {
+            this.cameras.main.fade(500, 0xFF,0xFF,0xFF);
+            this.time.delayedCall(500, () => this.scene.start('Title'));
+        });
+    }
+}
+
 class Title extends Phaser.Scene {
     constructor(){
         super("Title");
+        this.muted = false;
+    }
+
+    init(data) {
+        if (data != undefined) this.muted = data.muted;
     }
 
     preload() {
@@ -16,12 +39,23 @@ class Title extends Phaser.Scene {
     create() {
         this.back = this.add.image(game.canvas.width/2, game.canvas.height/2, "back").setOrigin(0.5,0.5).setScale(3);
 
+        // mute button
+        this.muteButton = new MuteButton(this, 100, game.canvas.height - 100, () => {
+            if (this.muted) {
+                Tone.Transport.start();
+                this.muted = false;
+            } else {
+                Tone.Transport.stop();
+                this.muted = true;
+            }
+        })
+
         // create a new text object
         let titleText = this.add.image(1920/2, 220, 'title').setOrigin(.5, .5).setScale(2);
 
         let play = new Button(this, game.config.width/2 - 400, game.config.height/2,
         "PLAY", () => {
-            this.scene.start("RunnerLevel");
+            this.scene.start("RunnerLevel", {muted: this.muted});
         }, 2);
         
         let clear = new Button(this, game.config.width/2 - 400, game.config.height/2 + 200,
@@ -64,7 +98,7 @@ class Title extends Phaser.Scene {
             }).setOrigin(0, 0.5);
         
         let authors4 = this.add.text(game.config.width * 0.6, game.config.height * 0.86,
-            "Art Lead:\n     Aaron Bruno",
+            "Testing/Art Lead:\n     Aaron Bruno",
             {
                 font:"50px Arial",
                 color: "#FFFFFF",
@@ -106,7 +140,6 @@ class Title extends Phaser.Scene {
         const seq3 = new Tone.Sequence((time, note) => {
             synth3.triggerAttackRelease(note, 0.1, time);
         }, [,,"G4","G4",,,"G4",,"G4",,,"G4",,,"G4",,,,"G4","G4",,,"G4",,"G4",,,"G#4",,,"F#4",,]).start("8m");
-        Tone.Transport.start();
-        
+        if (!this.muted) Tone.Transport.start();
     }
 }

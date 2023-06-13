@@ -38,6 +38,10 @@ class RunnerLevel extends Phaser.Scene {
         this.start = this.width/5; // start point for player
     }
 
+    init(data) {
+        this.muted = data.muted; // get if scene should be muted
+    }
+
     preload() {
         this.load.path = "assets/";
 
@@ -180,8 +184,7 @@ class RunnerLevel extends Phaser.Scene {
         const seq4 = new Tone.Sequence((time, note) => {
             synth4.triggerAttackRelease(note, 0.1, time);
         }, ["F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6",]).start("24m");
-        Tone.Transport.start();
-
+        if (!this.muted) Tone.Transport.start();
     }
 
     // remove object from placed list
@@ -194,7 +197,7 @@ class RunnerLevel extends Phaser.Scene {
     // delta contains the time since the last frame update
     update(time, delta) {
         if (this.home) {
-            this.scene.start("Title");
+            this.scene.start("Title", {muted: this.muted});
         }
 
 

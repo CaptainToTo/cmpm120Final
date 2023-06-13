@@ -58,6 +58,17 @@ class Paused extends Phaser.Scene {
                 this.scale.startFullscreen();
             }
         });
+
+        // mute button
+        this.muteButton = new MuteButton(this, 100, game.canvas.height - 100, () => {
+            if (this.origin.muted) {
+                Tone.Transport.start();
+                this.origin.muted = false;
+            } else {
+                Tone.Transport.stop();
+                this.origin.muted = true;
+            }
+        })
     }
 
     delete() {
@@ -66,6 +77,7 @@ class Paused extends Phaser.Scene {
         if (this.clear != undefined) this.clear.destroy();
         if (this.home != undefined) this.home.destroy();
         if (this.full != undefined) this.full.destroy();
+        if (this.muteButton != undefined) this.muteButton.destroy();
     }
 }
 

@@ -1,9 +1,4 @@
-# ChronoCart Scene Flow Prototype
-- [x]  2+ Audio Types
-    * Dynamically-generated sound
-    * Voice clip triggered in response to game event
-- [x]  Visual
-- [x]  Motion
-- [x]  Progression
-- [x]  Prefabs
+# Version 1: First Playable Prototype
+
+## Deployed Link: https://captaintoto.github.io/cmpm120Final/version1/index.html
     
