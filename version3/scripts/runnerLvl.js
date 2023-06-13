@@ -125,7 +125,10 @@ class RunnerLevel extends Phaser.Scene {
         this.tutorials = this.add.container(this.width, this.base * 0.5);
         this.tutorials.add([this.tut1, this.tut2, this.tut3]);
 
-        this.floorLayer = this.matter.world.nextCategory();
+        if (this.floorLayer == undefined) {
+            console.log("created floor layer")
+            this.floorLayer = this.matter.world.nextCategory();
+        }
 
         this.boxQueue.push(
             this.addBox(this.mid/2, this.base, this.width*2.5, this.minHeight)
@@ -156,8 +159,6 @@ class RunnerLevel extends Phaser.Scene {
         
         this.scoreBoard = this.add.container(200, 300);
         this.scoreBoard.add([this.scoreText, this.highText]);
-
-        
     }
 
     // remove object from placed list
