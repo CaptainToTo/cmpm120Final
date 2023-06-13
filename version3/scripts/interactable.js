@@ -25,14 +25,14 @@ class Interactable {
             .on('pointerdown', () => {
                 this.scene.tweens.add({
                     targets: this.image,
-                    scaleX: this.originalScale,
+                    scaleX: this.originalScale - (this.originalScale * 0.1),
                     duration: 100
                 });
             })
             .on('pointerup', () => {
                 this.scene.tweens.add({
                     targets: this.image,
-                    scaleX: this.originalScale + (this.originalScale * 0.1),
+                    scaleX: this.originalScale,
                     delay: 100,
                     duration: 100
                 });
