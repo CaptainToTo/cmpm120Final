@@ -89,11 +89,9 @@ class RunnerLevel extends Phaser.Scene {
 
         this.blockNo += 1;
         // check if object should be placed
-        if(this.boxQueue.length > 0) {
-            let obj = this.loader.Load("O" + String(this.blockNo));
-            if (obj != null) {
-                return obj;
-            }
+        let obj = this.loader.Load("O" + String(this.blockNo));
+        if (obj != null) {
+            return obj;
         }
 
         // generate new blocks
