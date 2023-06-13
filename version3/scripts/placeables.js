@@ -27,6 +27,7 @@ class Placeable {
         this.saved = false;     // if object was placed in a previous run, previous duplicate saves
 
         this.noisy = new Tone.NoiseSynth().toDestination();
+        this.noisy.volume.value = -8
         this.osc = new Tone.Oscillator().toDestination();
         this.plucky = new Tone.PluckSynth().toDestination();
 
@@ -132,6 +133,7 @@ class Bomb extends Placeable {
 
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue
+                this.osc.volume.value = 0;
                 this.osc.frequency.value = "C3";
                 this.osc.frequency.rampTo("C2", 1);
                 this.osc.start().stop("+1");
@@ -220,6 +222,7 @@ class JumpPad extends Placeable {
             if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
                 (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
                     self.scene.player.frontWheel.setVelocity(50, -10);
+                    this.osc.volume.value = -16;
                     this.osc.frequency.value = "C4";
                     this.osc.frequency.rampTo("C5", .5);
                     this.osc.start().stop("+.5");
