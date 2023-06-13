@@ -41,6 +41,9 @@ class RunnerLevel extends Phaser.Scene {
     preload() {
         this.load.path = "assets/";
 
+        // background
+        this.load.image("back", "background.png");
+
         // environment blocks
         this.load.image("explodable", "explodable.png");
         this.load.image("weatherable", "weatherable.png");
@@ -112,6 +115,10 @@ class RunnerLevel extends Phaser.Scene {
     }
 
     create() {
+        this.home = false;
+
+        this.back = this.add.image(this.width/2, this.base/2, "back").setOrigin(0.5,0.5).setScale(3);
+
         this.floorLayer = this.matter.world.nextCategory();
 
         this.boxQueue.push(
@@ -119,7 +126,7 @@ class RunnerLevel extends Phaser.Scene {
         );
 
         // create conveyer belt
-        this.belt = new Belt(this, this.width * 0.7, this.base * 0.1);
+        this.belt = new Belt(this, this.width * 0.65, this.base * 0.1);
         
         // create player
         this.player = new Player(this, this.start, this.base/2);
@@ -141,7 +148,7 @@ class RunnerLevel extends Phaser.Scene {
                 color: "#FFFFFF",
             }).setOrigin(0.5, 0.5);
         
-        this.scoreBoard = this.add.container(500, 100);
+        this.scoreBoard = this.add.container(200, 300);
         this.scoreBoard.add([this.scoreText, this.highText]);
 
         // tutorial
@@ -161,6 +168,11 @@ class RunnerLevel extends Phaser.Scene {
 
     // delta contains the time since the last frame update
     update(time, delta) {
+        if (this.home) {
+            this.scene.start("Title");
+        }
+
+
         // move tutorials
         if (this.tutorials != null) {
             this.tutorials.x -= this.speed * delta;

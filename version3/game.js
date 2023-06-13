@@ -5,14 +5,14 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    backgroundColor: 0x0000ff,
-    scene: [RunnerLevel, Title, Paused, GameOver, Loading],
+    backgroundColor: 0x000000,
+    scene: [Title, RunnerLevel, Paused, GameOver, Loading, BackHome],
     powerPerformance: "high-performance",
     title: "Runner",
     physics: {
         default: "matter",
-        matter: {
-            debug: true
-        }
+        //matter: {
+        //    debug: true
+        //}
     }
 });

@@ -5,12 +5,17 @@ class Title extends Phaser.Scene {
 
     preload() {
         this.cameras.main.setZoom(.001);
+        this.load.path = "assets/";
+        this.load.image("board", "board.png");
+        // background
+        this.load.image("back", "background.png");
     }
 
     create() {
+        this.back = this.add.image(game.canvas.width/2, game.canvas.height/2, "back").setOrigin(0.5,0.5).setScale(3);
+
         // create a new text object
-        let bg = this.add.rectangle (1920/2, 1080/2, 1920, 1080, "0x005b37")
-        let titleText = this.add.text(1920/2, 300, 'ChronoCart', {
+        let titleText = this.add.text(1920/2, 250, 'ChronoCart', {
             fontSize: 120,
             color: '#dd571c'
         }).setOrigin(.5, .5);

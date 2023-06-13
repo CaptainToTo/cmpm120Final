@@ -5,15 +5,15 @@
 
 class Belt {
     constructor(scene, x, y, max=10) {
-        this.scale = 0.6;
-        this.sprite = scene.add.sprite(x, y, "belt").setScale(this.scale);
+        this.scale = 2.8;
+        this.sprite = scene.add.sprite(x, y, "belt").setScale(this.scale + 1, this.scale);
         this.scene = scene;
 
         this.max = max; // maximum number of placeables on the belt at a time
         this.objects = []; // list containing the placeables on the belt
         
         // visual formatting for organizing objects on conveyer belt
-        this.scaleWidth = (this.sprite.width * this.scale);
+        this.scaleWidth = (this.sprite.width * (this.scale + 1));
         this.spacing = 50; // space placed in between objects
         this.margin = this.sprite.x - (this.scaleWidth / 2) + 150; // stopping point for first object on belt in global space
         this.spawn = this.sprite.x + (this.scaleWidth / 2) + 200; // x coord where objects will be instantiated

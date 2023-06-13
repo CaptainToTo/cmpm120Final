@@ -6,7 +6,7 @@ class PauseButton {
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
                 scene.scene.pause();
-                scene.scene.launch("Paused");
+                scene.scene.launch("Paused", {scene: scene});
             });
     }
 }
@@ -14,6 +14,10 @@ class PauseButton {
 class Paused extends Phaser.Scene {
     constructor() {
         super("Paused");
+    }
+
+    init(data) {
+        this.origin = data.scene;
     }
 
     preload() {}
@@ -42,7 +46,8 @@ class Paused extends Phaser.Scene {
         this.home = new Button(this, game.config.width/2 + 400, game.config.height/2,
             "HOME", () => {
                 this.delete();
-                this.scene.start("Title");
+                this.origin.home = true;
+                this.scene.resume("RunnerLevel");
             });
         
         this.full = new Button(this, game.config.width/2 + 400, game.config.height/2 + 200,
@@ -72,5 +77,16 @@ class Loading extends Phaser.Scene {
 
     create() {
         this.scene.start("RunnerLevel");
+    }
+}
+
+// intermediate loading scene in between gameover/pause and restart runner scene
+class BackHome extends Phaser.Scene {
+    constructor() {
+        super("BackHome");
+    }
+
+    create() {
+        this.scene.start("Title");
     }
 }

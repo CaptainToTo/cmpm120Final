@@ -279,14 +279,6 @@ class Block extends Placeable {
             // save object
             this.scene.pList.Insert(this);
         }
-
-        this.scene.tweens.add({
-            targets: this.sprite,
-            scale: this.stretch,
-            duration: 200
-        });
-
-        this.scene.time.delayedCall(200, this.setScale(this.stretch));
     }
 }
 
