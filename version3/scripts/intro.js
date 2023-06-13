@@ -88,5 +88,22 @@ class Title extends Phaser.Scene {
                 full.image.setAlpha(1);
             }
         });
+        const synth1 = new Tone.Synth().toDestination();
+        const synth2 = new Tone.Synth().toDestination();
+        const synth3 = new Tone.Synth().toDestination();
+        synth2.volume.value = -16; 
+        synth3.volume.value = -16;
+        Tone.Transport.bpm.value = 220;
+        const seq1 = new Tone.Sequence((time, note) => {
+            synth1.triggerAttackRelease(note, 0.1, time);
+        }, ["C2",,,"C2","G2","G2","D#2",,,"D#2","F#2","F#2","C#2",,,"C#2"]).start(0);
+        const seq2 = new Tone.Sequence((time, note) => {
+            synth2.triggerAttackRelease(note, 0.1, time);
+        }, [,,"D#4","D#4",,"D#4","D#4",,"D#4",,,"D#4",,,"D#4",,,,"D#4","D#4",,"D#4","D#4",,"D#4",,,"D#4",,,"D4",,]).start("4m");
+        const seq3 = new Tone.Sequence((time, note) => {
+            synth3.triggerAttackRelease(note, 0.1, time);
+        }, [,,"G4","G4",,,"G4",,"G4",,,"G4",,,"G4",,,,"G4","G4",,,"G4",,"G4",,,"G#4",,,"F#4",,]).start("8m");
+        Tone.Transport.start();
+        
     }
 }

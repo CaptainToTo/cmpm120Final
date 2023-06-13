@@ -69,7 +69,7 @@ class GameOver extends Phaser.Scene {
                     }, "image/jpeg")
                 }
             }
-        ])
+        ]);
         timeline1.play();
     }
 

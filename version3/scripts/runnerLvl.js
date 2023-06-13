@@ -114,6 +114,7 @@ class RunnerLevel extends Phaser.Scene {
 
     create() {
         this.home = false;
+        Tone.Transport.cancel();
 
         this.back = this.add.image(this.width/2, this.base/2, "back").setOrigin(0.5,0.5).setScale(3);
         // tutorial
