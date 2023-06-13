@@ -59,9 +59,6 @@ class Title extends Phaser.Scene {
 
         let play = new Button(this, game.config.width/2 - 400, game.config.height/2,
         "PLAY", () => {
-            this.synth1.dispose();
-            this.synth2.dispose();
-            this.synth3.dispose();
             this.seq1.dispose();
             this.seq2.dispose();
             this.seq3.dispose();
@@ -135,20 +132,20 @@ class Title extends Phaser.Scene {
 
         Tone.Transport.stop();
         Tone.Transport.cancel();
-        this.synth1 = new Tone.Synth().toDestination();
-        this.synth2 = new Tone.Synth().toDestination();
-        this.synth3 = new Tone.Synth().toDestination();
-        this.synth2.volume.value = -16; 
-        this.synth3.volume.value = -16;
+        synth1 = new Tone.Synth().toDestination();
+        synth2 = new Tone.Synth().toDestination();
+        synth3 = new Tone.Synth().toDestination();
+        synth2.volume.value = -16; 
+        synth3.volume.value = -16;
         Tone.Transport.bpm.value = 220;
         this.seq1 = new Tone.Sequence((time, note) => {
-            this.synth1.triggerAttackRelease(note, 0.1, time);
+            synth1.triggerAttackRelease(note, 0.1, time);
         }, ["C2",,,"C2","G2","G2","D#2",,,"D#2","F#2","F#2","C#2",,,"C#2"]).start(0);
         this.seq2 = new Tone.Sequence((time, note) => {
-            this.synth2.triggerAttackRelease(note, 0.1, time);
+            synth2.triggerAttackRelease(note, 0.1, time);
         }, [,,"D#4","D#4",,"D#4","D#4",,"D#4",,,"D#4",,,"D#4",,,,"D#4","D#4",,"D#4","D#4",,"D#4",,,"D#4",,,"D4",,]).start("4m");
         this.seq3 = new Tone.Sequence((time, note) => {
-            this.synth3.triggerAttackRelease(note, 0.1, time);
+            synth3.triggerAttackRelease(note, 0.1, time);
         }, [,,"G4","G4",,,"G4",,"G4",,,"G4",,,"G4",,,,"G4","G4",,,"G4",,"G4",,,"G#4",,,"F#4",,]).start("8m");
         if (!this.muted) Tone.Transport.start();
     }

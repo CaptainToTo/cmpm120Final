@@ -1,3 +1,8 @@
+let synth1 = new Tone.Synth().toDestination()
+let synth2 = new Tone.Synth().toDestination();
+let synth3 = new Tone.Synth().toDestination();
+let synth4 = new Tone.Synth().toDestination();
+
 class RunnerLevel extends Phaser.Scene {
     constructor(name="RunnerLevel", /*seed="12345",*/ speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {
         super(name);
@@ -168,40 +173,30 @@ class RunnerLevel extends Phaser.Scene {
 
         Tone.Transport.stop();
         Tone.Transport.cancel();
-        this.synth1 = new Tone.Synth().toDestination();
-        this.synth2 = new Tone.Synth().toDestination();
-        this.synth3 = new Tone.Synth().toDestination();
-        this.synth4 = new Tone.Synth().toDestination();
-        this.synth2.volume.value = -16; 
-        this.synth3.volume.value = -16;
-        this.synth4.volume.value = -16;
+        synth2.volume.value = -16; 
+        synth3.volume.value = -16;
+        synth4.volume.value = -16;
         Tone.Transport.bpm.value = 160;
         this.seq1 = new Tone.Sequence((time, note) => {
-            this.synth1.triggerAttackRelease(note, 0.1, time);
+            synth1.triggerAttackRelease(note, 0.1, time);
         }, ["F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C2","C2","C2","C2","C2","C2","C2","C2"]).start(0);
         this.seq2 = new Tone.Sequence((time, note) => {
-            this.synth2.triggerAttackRelease(note, 0.1, time);
+            synth2.triggerAttackRelease(note, 0.1, time);
         }, ["G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","B3","B3","B3","B3","B3","B3","B3","B3","G3","G3","G3","G3","G3","G3","G3","G3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C4","C4","C4","C4","C4","C4","C4","C4",]).start("8m");
         this.seq3 = new Tone.Sequence((time, note) => {
-            this.synth3.triggerAttackRelease(note, 0.1, time);
+            synth3.triggerAttackRelease(note, 0.1, time);
         }, ["C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","B4","B4","B4","B4","B4","B4","B4","B4","E4","E4","E4","E4","E4","E4","E4","E4","C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","C#5","C#5","C#5","C#5","C#5","C#5","C#5","C#5","E5","E5","E5","E5","E5","E5","E5","E5",]).start("16m");
         this.seq4 = new Tone.Sequence((time, note) => {
-            this.synth4.triggerAttackRelease(note, 0.1, time);
+            synth4.triggerAttackRelease(note, 0.1, time);
         }, ["F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6",]).start("24m");
-        console.log("allocate");
         if (!this.muted) Tone.Transport.start();
     }
 
     dispose() {
-        this.synth1.dispose();
-        this.synth2.dispose();
-        this.synth3.dispose();
-        this.synth4.dispose();
         this.seq1.dispose();
         this.seq2.dispose();
         this.seq3.dispose();
         this.seq4.dispose();
-        console.log("clear");
     }
 
     // remove object from placed list
