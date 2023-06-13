@@ -168,27 +168,40 @@ class RunnerLevel extends Phaser.Scene {
 
         Tone.Transport.stop();
         Tone.Transport.cancel();
-        const synth1 = new Tone.Synth().toDestination();
-        const synth2 = new Tone.Synth().toDestination();
-        const synth3 = new Tone.Synth().toDestination();
-        const synth4 = new Tone.Synth().toDestination();
-        synth2.volume.value = -16; 
-        synth3.volume.value = -16;
-        synth4.volume.value = -16;
+        this.synth1 = new Tone.Synth().toDestination();
+        this.synth2 = new Tone.Synth().toDestination();
+        this.synth3 = new Tone.Synth().toDestination();
+        this.synth4 = new Tone.Synth().toDestination();
+        this.synth2.volume.value = -16; 
+        this.synth3.volume.value = -16;
+        this.synth4.volume.value = -16;
         Tone.Transport.bpm.value = 160;
-        const seq1 = new Tone.Sequence((time, note) => {
-            synth1.triggerAttackRelease(note, 0.1, time);
+        this.seq1 = new Tone.Sequence((time, note) => {
+            this.synth1.triggerAttackRelease(note, 0.1, time);
         }, ["F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","F2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C#2","C2","C2","C2","C2","C2","C2","C2","C2"]).start(0);
-        const seq2 = new Tone.Sequence((time, note) => {
-            synth2.triggerAttackRelease(note, 0.1, time);
+        this.seq2 = new Tone.Sequence((time, note) => {
+            this.synth2.triggerAttackRelease(note, 0.1, time);
         }, ["G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","B3","B3","B3","B3","B3","B3","B3","B3","G3","G3","G3","G3","G3","G3","G3","G3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","G#3","F3","F3","F3","F3","F3","F3","F3","F3","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C#4","C4","C4","C4","C4","C4","C4","C4","C4",]).start("8m");
-        const seq3 = new Tone.Sequence((time, note) => {
-            synth3.triggerAttackRelease(note, 0.1, time);
+        this.seq3 = new Tone.Sequence((time, note) => {
+            this.synth3.triggerAttackRelease(note, 0.1, time);
         }, ["C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","B4","B4","B4","B4","B4","B4","B4","B4","E4","E4","E4","E4","E4","E4","E4","E4","C5","C5","C5","C5","C5","C5","C5","C5","G#4","G#4","G#4","G#4","G#4","G#4","G#4","G#4","C#5","C#5","C#5","C#5","C#5","C#5","C#5","C#5","E5","E5","E5","E5","E5","E5","E5","E5",]).start("16m");
-        const seq4 = new Tone.Sequence((time, note) => {
-            synth4.triggerAttackRelease(note, 0.1, time);
+        this.seq4 = new Tone.Sequence((time, note) => {
+            this.synth4.triggerAttackRelease(note, 0.1, time);
         }, ["F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G5","G#5","G5","F5","G#5","F5","G#5","F5","G#5","F5","G#5","G5","C6","G5","C6","G5","C6","G5","C6",]).start("24m");
+        console.log("allocate");
         if (!this.muted) Tone.Transport.start();
+    }
+
+    dispose() {
+        this.synth1.dispose();
+        this.synth2.dispose();
+        this.synth3.dispose();
+        this.synth4.dispose();
+        this.seq1.dispose();
+        this.seq2.dispose();
+        this.seq3.dispose();
+        this.seq4.dispose();
+        console.log("clear");
     }
 
     // remove object from placed list
@@ -202,6 +215,7 @@ class RunnerLevel extends Phaser.Scene {
     update(time, delta) {
         if (this.home) {
             this.scene.start("Title", {muted: this.muted});
+            this.dispose();
         }
 
 
@@ -230,6 +244,7 @@ class RunnerLevel extends Phaser.Scene {
             console.log("gameOver");
             Tone.Transport.stop();
             Tone.Transport.cancel();
+            this.dispose();
             this.scene.pause();
             this.scene.launch("GameOver", {cart: this.player});
         }

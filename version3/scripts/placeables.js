@@ -5,6 +5,12 @@
 
 let placeablesIDs = 0;
 
+let noisy = new Tone.NoiseSynth().toDestination();
+noisy.volume.value = -8
+let plucky = new Tone.PluckSynth().toDestination();
+let gainNode = new Tone.Gain(0).toDestination();
+let osc = new Tone.Oscillator().connect(gainNode).start();
+
 class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=1) {
         this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);
@@ -25,12 +31,6 @@ class Placeable {
         this.placed = false;    // tracks if object has been placed
         this.grabbed = false;   // player is currently placing object
         this.saved = false;     // if object was placed in a previous run, previous duplicate saves
-
-        this.noisy = new Tone.NoiseSynth().toDestination();
-        this.noisy.volume.value = -8
-        this.plucky = new Tone.PluckSynth().toDestination();
-        this.gainNode = new Tone.Gain(0).toDestination();
-        this.osc = new Tone.Oscillator().connect(this.gainNode).start();
 
         // synth.volume.value = -8;
 
@@ -63,8 +63,8 @@ class Placeable {
                         scale: self.originalScale + (self.originalScale * 0.1),
                         duration: 150
                     })
-                    this.noisy.noise.type = "brown"
-                    this.noisy.triggerAttackRelease("8n")
+                    noisy.noise.type = "brown"
+                    noisy.triggerAttackRelease("8n")
                 }
             })
             .on("pointerup", () => { // drop object
@@ -134,10 +134,11 @@ class Bomb extends Placeable {
 
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue
-                this.osc.frequency.value = "C3";
-                this.osc.frequency.rampTo("C2", 1);
-                this.gainNode.gain.rampTo(1, 0.1);
-                this.gainNode.gain.rampTo(0, 0.7, "+0.3")
+                osc.volume.value = 0;
+                osc.frequency.value = "C3";
+                osc.frequency.rampTo("C2", 1);
+                gainNode.gain.rampTo(1, 0.1);
+                gainNode.gain.rampTo(0, 0.7, "+0.3")
                 this.scene.boxQueue[i].Demolish();
                 break;
             }
@@ -167,8 +168,8 @@ class WaterBucket extends Placeable {
             if (col) {
                 if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
                 // TODO: weathering animation
-                this.plucky.volume.value = 10;
-                this.plucky.triggerAttack("C5");
+                plucky.volume.value = 10;
+                plucky.triggerAttack("C5");
                 this.scene.boxQueue[i].Weather();
                 break;
             }
@@ -204,8 +205,8 @@ class JumpPad extends Placeable {
         super.Place();
 
         if (!this.saved) {
-            this.noisy.noise.type = "pink"
-            this.noisy.triggerAttackRelease("8n")
+            noisy.noise.type = "pink"
+            noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object
@@ -223,11 +224,11 @@ class JumpPad extends Placeable {
             if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
                 (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
                     self.scene.player.frontWheel.setVelocity(50, -10);
-                    this.osc.volume.value = -16;
-                    this.osc.frequency.value = "C4";
-                    this.osc.frequency.rampTo("C5", .5);
-                    this.gainNode.gain.rampTo(1, 0.1);
-                    this.gainNode.gain.rampTo(0, 0.1, "+0.4")
+                    osc.volume.value = -16;
+                    osc.frequency.value = "C4";
+                    osc.frequency.rampTo("C5", .5);
+                    gainNode.gain.rampTo(1, 0.1);
+                    gainNode.gain.rampTo(0, 0.1, "+0.4")
             }
         })
 
@@ -260,8 +261,8 @@ class Ramp extends Placeable {
     Place() {
         super.Place();
         if (!this.saved) {
-            this.noisy.noise.type = "pink"
-            this.noisy.triggerAttackRelease("8n")
+            noisy.noise.type = "pink"
+            noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object
@@ -303,8 +304,8 @@ class Block extends Placeable {
         super.Place();
         this.sprite.body.isStatic = true;
         if (!this.saved) {
-            this.noisy.noise.type = "pink"
-            this.noisy.triggerAttackRelease("8n")
+            noisy.noise.type = "pink"
+            noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object

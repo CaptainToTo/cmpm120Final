@@ -40,6 +40,7 @@ class Paused extends Phaser.Scene {
             "RESET", () => {
                 this.delete();
                 localStorage.clear();
+                this.origin.dispose();
                 this.scene.start("Loading");
             });
         
@@ -61,13 +62,14 @@ class Paused extends Phaser.Scene {
 
         // mute button
         this.muteButton = new MuteButton(this, 100, game.canvas.height - 100, () => {
-            if (this.origin.muted) {
-                Tone.Transport.start();
-                this.origin.muted = false;
-            } else {
-                Tone.Transport.stop();
-                this.origin.muted = true;
-            }
+            Tone.Transport.toggle();
+            // if (this.origin.muted) {
+            //     Tone.Transport.start();
+            //     this.origin.muted = false;
+            // } else {
+            //     Tone.Transport.stop();
+            //     this.origin.muted = true;
+            // }
         })
     }
 
