@@ -2,7 +2,7 @@
 
 ## Deployed Link (access all versions): https://captaintoto.github.io/cmpm120Final/
 
-## Complete Experience: https://captaintoto.github.io/cmpm120Final/version3/index.html
+## Complete Experience: https://atumemot.itch.io/chronocart
 
 ## Cinematic Prototype: https://captaintoto.github.io/cmpm120Final/version3/cinematics1.html
 
