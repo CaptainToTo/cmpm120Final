@@ -17,7 +17,7 @@ class Title extends Phaser.Scene {
         this.back = this.add.image(game.canvas.width/2, game.canvas.height/2, "back").setOrigin(0.5,0.5).setScale(3);
 
         // create a new text object
-        let titleText = this.add.image(1920/2, 250, 'title').setOrigin(.5, .5).setScale(2);
+        let titleText = this.add.image(1920/2, 220, 'title').setOrigin(.5, .5).setScale(2);
 
         let play = new Button(this, game.config.width/2 - 400, game.config.height/2,
         "PLAY", () => {
