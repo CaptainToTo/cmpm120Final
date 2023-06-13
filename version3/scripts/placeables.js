@@ -131,11 +131,7 @@ class Bomb extends Placeable {
             const col = Matter.SAT.collides(this.sprite.body, this.scene.boxQueue[i].sprite.body);
 
             if (col) {
-                if (this.scene.boxQueue[i].objectType == "Bedrock") continue;
-                // TODO: exploding animation
-                // this.noisy.noise.type = "white"
-                // this.noisy.envelope.sustain = .1
-                // this.noisy.triggerAttackRelease("8n");
+                if (this.scene.boxQueue[i].objectType == "Bedrock") continue
                 this.osc.frequency.value = "C3";
                 this.osc.frequency.rampTo("C2", 1);
                 this.osc.start().stop("+1");
@@ -203,7 +199,10 @@ class JumpPad extends Placeable {
 
     Place() {
         super.Place();
+
         if (!this.saved) {
+            this.noisy.noise.type = "pink"
+            this.noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object
@@ -221,7 +220,9 @@ class JumpPad extends Placeable {
             if ((bodyA == self.sprite.body && bodyB == self.scene.player.frontWheel.body) ||
                 (bodyB == self.sprite.body && bodyA == self.scene.player.frontWheel.body)) {
                     self.scene.player.frontWheel.setVelocity(50, -10);
-                    
+                    this.osc.frequency.value = "C4";
+                    this.osc.frequency.rampTo("C5", .5);
+                    this.osc.start().stop("+.5");
             }
         })
 
@@ -254,6 +255,8 @@ class Ramp extends Placeable {
     Place() {
         super.Place();
         if (!this.saved) {
+            this.noisy.noise.type = "pink"
+            this.noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object
@@ -295,6 +298,8 @@ class Block extends Placeable {
         super.Place();
         this.sprite.body.isStatic = true;
         if (!this.saved) {
+            this.noisy.noise.type = "pink"
+            this.noisy.triggerAttackRelease("8n")
             this.id = placeablesIDs;
             placeablesIDs += 1;
             // save object
