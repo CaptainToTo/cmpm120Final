@@ -5,6 +5,8 @@ class PauseButton {
         this.button = scene.add.text(x, y, "⏸️", { fontSize: size })
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => {
+                synth5.volume.value = -8;
+                synth5.triggerAttackRelease("F4", "16n");
                 scene.scene.pause();
                 scene.scene.launch("Paused", {scene: scene});
             });

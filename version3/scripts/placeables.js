@@ -5,12 +5,6 @@
 
 let placeablesIDs = 0;
 
-let noisy = new Tone.NoiseSynth().toDestination();
-noisy.volume.value = -8
-let plucky = new Tone.PluckSynth().toDestination();
-let gainNode = new Tone.Gain(0).toDestination();
-let osc = new Tone.Oscillator().connect(gainNode).start();
-
 class Placeable {
     constructor(scene, x, y, sprite, belt, stretch=1) {
         this.sprite = scene.matter.add.sprite(x, y, sprite).setOrigin(0.5, 0.5);

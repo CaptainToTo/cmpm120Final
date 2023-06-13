@@ -1,7 +1,4 @@
-let synth1 = new Tone.Synth().toDestination()
-let synth2 = new Tone.Synth().toDestination();
-let synth3 = new Tone.Synth().toDestination();
-let synth4 = new Tone.Synth().toDestination();
+
 
 class RunnerLevel extends Phaser.Scene {
     constructor(name="RunnerLevel", /*seed="12345",*/ speed=0.7, maxWidth=500, minWidth=200, maxHeight=1000, minHeight=150) {

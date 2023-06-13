@@ -28,6 +28,8 @@ class Interactable {
                     scaleX: this.originalScale - (this.originalScale * 0.05),
                     duration: 100
                 });
+                synth5.volume.value = -8;
+                synth5.triggerAttackRelease("F3", "32n");
             })
             .on('pointerup', () => {
                 this.scene.tweens.add({
@@ -36,6 +38,8 @@ class Interactable {
                     delay: 100,
                     duration: 100
                 });
+                synth5.volume.value = -8;
+                synth5.triggerAttackRelease("F4", "16n");
                 this.action()
             });
     }
