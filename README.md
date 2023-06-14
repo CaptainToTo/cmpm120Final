@@ -22,7 +22,7 @@ ChronoCart has the player traversing the same level on repeated playthroughs. An
 
 ## Requirements:
 
-- **Project Archive**: this GitHub repo contains commit records for all progress made on the project. There are also multiple versions deployed to illustrate our progress.
+- **Project Archive**: this GitHub repo contains commit records for all progress made on the project.
 
 - **Source Code**: All source code is located within this repo. External libraries we used have been cited below.
 
