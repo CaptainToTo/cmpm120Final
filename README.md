@@ -36,9 +36,9 @@ ChronoCart has the player traversing the same level on repeated playthroughs. An
 
 - **Data Driven Experience Progression**: Data from the player's run of the level is saved as JSON in the browser's local storage. This data is fetched to rebuild the level on subsequent runs.
 
-- **Procedural Audio**: Background music is created using ToneJS.
+- **Procedural Audio**: All Background music and sound effects are generated using ToneJS.
 
-- **Procedural Graphics**: The minecart's animations are created procedurally, using the matter physics engine.
+- **Procedural Graphics**: The minecart is built from several moving parts using the matter physics engine. These parts dynamically move in relation to one another and the environment.
 
 ## Issues:
 
