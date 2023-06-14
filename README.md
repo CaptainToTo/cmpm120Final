@@ -1,12 +1,12 @@
 # cmpm120Final: ChronoCart
 
-## Deployed Link (access all versions): https://captaintoto.github.io/cmpm120Final/
+## [Complete Experience](https://atumemot.itch.io/chronocart)
 
-## Complete Experience: https://atumemot.itch.io/chronocart
+## [Cinematic Prototype](https://captaintoto.github.io/cmpm120Final/prototypes/cinematicsPrototype/)
 
-## Cinematic Prototype: https://captaintoto.github.io/cmpm120Final/version3/cinematics1.html
+## [Sceneflow Prototype](https://captaintoto.github.io/cmpm120Final/prototypes/sceneFlowPrototype/)
 
-## Sceneflow Prototype: https://captaintoto.github.io/cmpm120Final/version3/sceneflow1.html
+## [Gameplay Prototype](https://captaintoto.github.io/cmpm120Final/prototypes/gameplayPrototype/)
 
 ## Roles:
 
